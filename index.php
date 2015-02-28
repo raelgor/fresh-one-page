@@ -40,7 +40,7 @@ if($_GET['w']){
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta content='width=device-width, initial-scale=0.5, maximum-scale=2.5, user-scalable=1' name='viewport' />
-<title>Fresh Ideas</title>
+<title>Fresh Ideas | Advertising Interior Company</title>
 <meta name="title" content="Fresh Ideas">
 <meta name="description" content="<?=$desc?>">
 <meta name="keywords" content="fresh ideas, patras">
@@ -51,8 +51,6 @@ if($_GET['w']){
 <meta property="og:type" content="website">
 <meta property="og:locale" content="el_GR">
 <meta property="og:description" content="<?=$desc?>">
-<link href="styles.css" rel="stylesheet" type="text/css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <?php
 
 
@@ -103,15 +101,19 @@ $clients = $q->fetchall(PDO::FETCH_ASSOC);
 ?>
 <script>
 
-var menuData = <?=json_encode($menuData)?>;
-var settings = <?=json_encode($settings)?>;
-var workCategories = <?=json_encode($workCategories)?>;
-var worksData = <?=json_encode($worksData)?>;
-var images = <?=json_encode($images)?>;
-var pages = <?=json_encode($pages)?>;
-var clients = <?=json_encode($clients)?>;
-window._prefix = '<?=$prefix?>';
+  var siteData = {
+    menu: <?=json_encode($menuData)?>,
+    settings: <?=json_encode($settings)?>,
+    categories: <?=json_encode($workCategories)?>,
+    works: <?=json_encode($worksData)?>,
+    images: <?=json_encode($images)?>,
+    pages: <?=json_encode($pages)?>,
+    clients: <?=json_encode($clients)?>
+  }
+
 </script>
+<link href="styles.css" rel="stylesheet" type="text/css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="jsbinder.php"></script>
 <link rel="shortcut icon" href="images/favicon.ico">
 </head>
@@ -145,7 +147,7 @@ try{ navData = JSON.parse(navData); }catch(x){ navData = []; }
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
  $('body').prepend('<style>.right-arrow { right: -7px !important; position: absolute !important; }.left-arrow { left: -7px !important; position: absolute !important; }</style>');
 }
-init();
+  var Site = new OnePage(window);
 </script>
 </body>
 </html>

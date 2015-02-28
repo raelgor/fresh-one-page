@@ -58,7 +58,7 @@ body {
 	font-weight: normal;
 }
 .side-bg {
-	background: url(bg_pattern.gif);
+	background: url(images/bg_pattern.gif);
 	width: 10%;
 	height: 1000px;
 	float: left;
@@ -80,7 +80,7 @@ body {
 	cursor: pointer;
 	width: 270px;
 	height: 160px;
-	background: url(logo.jpg) no-repeat;
+	background: url(images/logo.jpg) no-repeat;
 	display: inline-block;
 	background-position: 0px 50%;
 	background-size: 94%;
@@ -155,14 +155,14 @@ body {
 	white-space: nowrap;
 }
 .contactButton {
-	background-image: url(button_contact.jpg) !important;
+	background-image: url(images/button_contact.jpg) !important;
 	border-radius: 0px !important;
 	background-color: white !important;
 	background-size: 100% !important;
 	background-repeat: no-repeat !important;
 }
 .contactButton:hover, .contactButton.selected {
-	background-image: url(button_contact_active.jpg) !important;
+	background-image: url(images/button_contact_active.jpg) !important;
 }
 .mainImage {
 	cursor: pointer;
@@ -189,7 +189,7 @@ body {
 	width: 30%;
 }
 .shadow {
-	background-image: url(thumb_shadow.jpg);
+	background-image: url(images/thumb_shadow.jpg);
 	width: 100%;
 	height: 9%;
 	background-position: 0% 150%;
@@ -278,7 +278,7 @@ article {
 	cursor: pointer;
 	width: 260px;
 	height: 160px;
-	background: url(logo.jpg) no-repeat;
+	background: url(images/logo.jpg) no-repeat;
 	display: inline-block;
 	background-position: 0px 50%;
 	background-size: 100%;
@@ -329,7 +329,7 @@ article {
 }
 
 
- 
+
  ::-webkit-scrollbar {
  width: 9px;
  background-color:transparent;
@@ -348,14 +348,14 @@ border-radius: 0px;
  background-color:rgba(102, 102, 102, 1);
 }
 div.menu-item:first-child .title {
-	background-image: url(button_contact.jpg);
+	background-image: url(images/button_contact.jpg);
 	border-radius: 0px;
 	background-size: 100%;
 	background-repeat: no-repeat;
 	background-color: white;
 }
 div.menu-item:first-child:hover .title, div.menu-item:first-child .title.selected {
-	background-image: url(button_contact_active.jpg) !important;
+	background-image: url(images/button_contact_active.jpg) !important;
 	background-size: 100%;
 	background-repeat: no-repeat;
 	background-color: white !important;
@@ -390,10 +390,10 @@ div.infobar span {
 	margin: 2px 6px 0 0;
 }
 .infobar .like {
-	background-image: url(like_thumb.png);
+	background-image: url(images/like_thumb.png);
 }
 .infobar .share {
-	background-image: url(share_thumb.png);
+	background-image: url(images/share_thumb.png);
 	background-size: 80%;
 }
 div.work-page-holder h1, div.work-page-holder h2 {
@@ -430,7 +430,7 @@ div.work-page-holder img {
 div.left-arrow {
 	z-index: 999999;
 	position: fixed;
-	background-image: url(arrow_left_normal.png);
+	background-image: url(images/arrow_left_normal.png);
 	width: 120px;
 	height: 220px;
 	background-size: contain;
@@ -440,12 +440,12 @@ div.left-arrow {
 	cursor: pointer;
 }
 div.left-arrow:hover {
-	background-image: url(arrow_left_hover.png);
+	background-image: url(images/arrow_left_hover.png);
 }
 div.right-arrow {
 	z-index: 999999;
 	position: fixed;
-	background-image: url(arrow_right_normal.png);
+	background-image: url(images/arrow_right_normal.png);
 	width: 120px;
 	height: 220px;
 	background-size: contain;
@@ -455,7 +455,7 @@ div.right-arrow {
 	cursor: pointer;
 }
 div.right-arrow:hover {
-	background-image: url(arrow_right_hover.png);
+	background-image: url(images/arrow_right_hover.png);
 }
 div.social {
 	margin: 50px auto;
@@ -465,7 +465,7 @@ div.social {
 }
 div.social .like, div.social .share {
 	display: inline-block;
-	background-image: url(like_work.png);
+	background-image: url(images/like_work.png);
 	width: 35px;
 	height: 50px;
 	background-repeat: no-repeat;
@@ -475,7 +475,7 @@ div.social .like, div.social .share {
 	cursor: pointer;
 }
 div.social .share {
-	background-image: url(share_work.png);
+	background-image: url(images/share_work.png);
 }
 .work-page-holder {
 	position: relative;
@@ -567,7 +567,7 @@ div.yellow-input.text textarea {
 div.send-button {
 	width: 100px;
 	height: 100px;
-	background-image: url(contact_send_normal.png);
+	background-image: url(images/contact_send_normal.png);
 	background-size: contain;
 	background-position: 50%;
 	background-repeat: no-repeat;
@@ -578,7 +578,7 @@ div.send-button {
 	top: -140px;
 }
 div.send-button:hover {
-	background-image: url(contact_send_hover.png);
+	background-image: url(images/contact_send_hover.png);
 }
 .contact-page-article {
 width: 125px !important;
@@ -615,7 +615,7 @@ h1 {
 	width: 72%;
 	margin: auto;
 	color: #eccf13;
-	text-align: left; 
+	text-align: left;
 	position:relative;  /* new */
 	left:5px; /* new */
 	font-weight: normal;
@@ -623,7 +623,7 @@ h1 {
 .hover-thumbs {
 	height: 30px;
 	width: 64px;
-	background: url(bubble_like-share_thumbs.png);
+	background: url(images/bubble_like-share_thumbs.png);
 	position: absolute;
 	text-align: center;
 	line-height: 20px;
@@ -685,7 +685,7 @@ div.work-page-holder h3, .site-page h3, div.work-page-holder h3 {
 	margin: auto;
 	text-align: left;
 	font-weight: normal;
-	
+
 	position:relative;  /* new */
 	left:5px; /* new */
 
@@ -697,7 +697,7 @@ div.work-page-holder h4, .site-page h4, div.work-page-holder h4 {
 	margin: auto;
 	text-align: left;
 	font-weight: normal;
-	
+
 	position:relative;  /* new */
 	left:5px; /* new */
 
@@ -713,7 +713,7 @@ div.work-page-holder h4, .site-page h4, div.work-page-holder h4 {
 	position: absolute;
 	width: 153px;
 	height: 100px;
-	background-image: url(social.png);
+	background-image: url(images/social.png);
 	background-size: contain;
 	background-repeat: no-repeat;
 	cursor: pointer;
@@ -730,12 +730,12 @@ div.work-page-holder h4, .site-page h4, div.work-page-holder h4 {
 	height: 50%;
 }
 /*-------------------------------<ITALIC>------------------------------------*/
-.CustomItalic { 
+.CustomItalic {
 	font-family: 'CustomItalic', sans-serif;
 	font-weight: normal;
 }
 
-.CustomLightItalic { 
+.CustomLightItalic {
 	font-family: 'CustomLightItalic', sans-serif;
 	font-weight: normal;
 }
@@ -743,38 +743,38 @@ div.work-page-holder h4, .site-page h4, div.work-page-holder h4 {
 
 
 
-.CustomMediumItalic { 
+.CustomMediumItalic {
 	font-family: 'CustomMediumItalic', sans-serif;
 	font-weight: normal;
 }
 
-.CustomItalicH1 { 
-	font-family: 'CustomItalic', sans-serif; 
-	font-size:20px; 
+.CustomItalicH1 {
+	font-family: 'CustomItalic', sans-serif;
+	font-size:20px;
 	color:#ababa6;
 	font-weight: normal;
 }
 
-.CustomLightItalicH1 { 
-	font-family: 'CustomLightItalic', sans-serif; 
-	font-size:20px; 
+.CustomLightItalicH1 {
+	font-family: 'CustomLightItalic', sans-serif;
+	font-size:20px;
 	color:#ababa6;
 	font-weight: normal;
 }
 
 
-.CustomLightItalicH2 { 
-	font-family: 'CustomLightItalic', sans-serif; 
-	font-size:17px; 
+.CustomLightItalicH2 {
+	font-family: 'CustomLightItalic', sans-serif;
+	font-size:17px;
 	color:#ababa6;
 	font-weight: normal; /*<span style="font-size:17px; color:rgb(134,134,133); font-family:CustomItalic;">*/
 }
 
 
 
-.CustomItalicH2 { 
-	font-family: 'CustomLightItalic', sans-serif; 
-	font-size:17px; 
+.CustomItalicH2 {
+	font-family: 'CustomLightItalic', sans-serif;
+	font-size:17px;
 	color:#ababa6;
 	font-weight: normal; /*<span style="font-size:17px; color:rgb(134,134,133); font-family:CustomItalic;">*/
 }

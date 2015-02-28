@@ -1,36 +1,40 @@
-// Developed by Kosmas Papadatos
-// facebook.com/kosmas.papadatos
+/*
+** FreshOnePage
+** Copyright (c) 2015 Kosmas Papadatos
+** License: MIT
+*/
 
-window.navM = "";
-window.navSM = "";
-window.vir = true;
-window.onpopstate = function(e){
+function OnePage(window){
 
-	e.state.navM && $('.menu-item[data-id="'+e.state.navM+'"] .title').click();
-	e.state.navSM && $('.menu-item .menu-sub[data-id="'+e.state.navSM+'"]').click();
-	e.state.c && (function(){
+  this.window = window;
 
-		$('.indexContent').animate({opacity:0},200,'swing',function(){
+  // Start the site
+  this.initialize();
+  console.log('FreshOnePage started.');
 
-			window.NavOnClient = e.state.c;
-			$(this).html('<div class="right-arrow"></div><div class="left-arrow"></div>').find('.left-arrow,.right-arrow').click(clientNavArr);
-			navToClient(e.state.c);
-			$(this).animate({opacity:1},200);
+}
 
-		});
+OnePage.prototype.initialize = function(window){
 
-	})()
-	e.state.w && (function(){
+  // Disable text selection on head
+	document.onselectstart = function(e){
+	   if($(e.target).hasClass('head') || $(e.target).parents('.head').length)
+	    return false;
+	}
 
-		$('.indexContent').animate({opacity:0},200,'swing',function(){
+  // Start listening to popstate events
+  this.setPopstateHandler();
 
-			$(this).html('<div class="right-arrow"></div><div class="left-arrow"></div>').find('.left-arrow,.right-arrow').click(workNavArr);
-			navToWork(e.state.w);
-			$(this).animate({opacity:1},200);
+  // Start preloading images
+  this.startPreloader();
 
-		});
+  // Create menu
+  this.menuFactory();
 
-	})()
+  // Get current state
+  this.getStateFromUrl();
+
+  //init();
 
 }
 
@@ -45,57 +49,12 @@ $(window).scroll(function(){
 					setTimeout(function(){ tar.remove(); },500);
 });
 
-// Preload
-var pl2 = new Image();
-pl2.src = 'images/arrow_left_hover.png';
-var pl4 = new Image();
-pl4.src = 'images/arrow_right_hover.png';
-var pl5 = new Image();
-pl4.src = 'images/contact_send_hover.png';
-
 function init(){
-	// Preloader
-	worksData.forEach(function(w){ $('.preloader').append(w.html); });
 
 	$('.top-scroller').click(function(){ $('body,html').animate({scrollTop:0+'px'},1000,'swing',function(){ $('.top-scroller').css({'-webkit-transform':'scale(0)','-moz-transform':'scale(0)','-o-transform':'scale(0)','-ms-transform':'scale(0)'}); }); });
 
-	menuData.forEach(function(button){
 
-		var element = document.createElement('div');
-		$(element).html('<div class="title ani02 ' + (button.isContactButton?'contactButton':'') + '">' + button.title + '</div>').addClass('menu-item').attr('data-id',button.id).attr('data-cat-id',button.category_id).attr('data-type',button.type);
 
-		button.submenu && button.submenu.forEach && button.submenu.forEach(function(subItem){
-
-			var sub = document.createElement('div');
-			$(sub).html(subItem.title).addClass("menu-sub ani02").attr('data-id',subItem.id).attr('data-cat-id',subItem.category_id).attr('data-type',subItem.type);
-			$(element).append(sub);
-
-		});
-
-		$('.nav-container').append(element);
-
-	});
-
-	$('.menu-item .title').click(function(){
-		window.navM = $(this).parents('.menu-item').attr('data-id');
-		$('.menu-item .title').removeClass('selected');
-		$('.menu-item').find('.menu-sub').css({
-			'opacity' : 0,
-			'top' : "-5px"
-		}).removeClass('selected');
-		$(this).addClass('selected');
-		$(this).parents('.menu-item').find(':nth-child(2)').click();
-		$(this).parents('.menu-item').find('.menu-sub').css({
-			'opacity' : 1,
-			'top' : 0
-		});
-		$(this).parents('.menu-item').attr('data-type') == "2" && showWorks($(this).parents('.menu-item').attr('data-cat-id'));
-		$(this).parents('.menu-item').attr('data-type') == "1" && showPage($(this).parents('.menu-item').attr('data-cat-id'));
-		$(this).parents('.menu-item').attr('data-type') == "3" && clientsPage($(this).parents('.menu-item').attr('data-cat-id'));
-
-		!$(this).parents('.menu-item').is(':has(.menu-sub)') && !vir && window.history.pushState({navM:navM,navSM:navSM},'','?m=' +  window.navM + '&sm=' + window.navSM);
-		vir = false;
-	});
 
 	$('.menu-item .menu-sub').click(function(){
 		window.navSM = $(this).attr('data-id');
@@ -108,7 +67,6 @@ function init(){
 		vir = false;
 	});
 
-	document.onselectstart = function(e){ if($(e.target).hasClass('head') || $(e.target).parents('.head').length) return false; }
 
 	console.log(settings,navData)
 	temp = 0;
