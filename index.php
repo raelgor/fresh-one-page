@@ -51,8 +51,8 @@ if($_GET['w']){
 <meta property="og:type" content="website">
 <meta property="og:locale" content="el_GR">
 <meta property="og:description" content="<?=$desc?>">
-<script src="jquery-1.10.2.js"></script>
-<script src="jquery-ui-1.10.4.min.js"></script>
+<link href="styles.css" rel="stylesheet" type="text/css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <?php
 
 
@@ -112,9 +112,8 @@ var pages = <?=json_encode($pages)?>;
 var clients = <?=json_encode($clients)?>;
 window._prefix = '<?=$prefix?>';
 </script>
-<script src="script.js"></script>
-<link href="styles.css" rel="stylesheet" type="text/css" />
-<link rel="shortcut icon" href="favicon.ico">
+<script src="jsbinder.php"></script>
+<link rel="shortcut icon" href="images/favicon.ico">
 </head>
 <body>
 
@@ -130,14 +129,14 @@ window._prefix = '<?=$prefix?>';
 </div>
 <div class="side-bg"></div>
 <div class="preloader">
-	<img scr="social.png" />
-	<img scr="arrow_left_normal.png" />
-	<img scr="arrow_left_hover.png" />
-	<img scr="arrow_right_normal.png" />
-	<img scr="arrow_right_hover.png" />
-	<img scr="button_contact_active.png" />
+	<img scr="images/social.png" />
+	<img scr="images/arrow_left_normal.png" />
+	<img scr="images/arrow_left_hover.png" />
+	<img scr="images/arrow_right_normal.png" />
+	<img scr="images/arrow_right_hover.png" />
+	<img scr="images/button_contact_active.png" />
 </div>
-<img src="BACK_TO_TOP.png" class="top-scroller ani05" />
+<img src="images/back_to_top.png" class="top-scroller ani05" />
 
 <script>
 var isiPad = navigator.userAgent.match(/iPad/i) != null;
