@@ -9,7 +9,7 @@ A lite One-Page site template.
 * Assiciate with Google+ Page
 * Create Google+ Page
 * Image dimention spaceholding
-* Fix meta data for share links
+* ~~Fix meta data for share links~~
 * Merge and minify CSS and JS
 * ~~Add caching headers and gzip~~
 * Analytics
@@ -17,3 +17,4 @@ A lite One-Page site template.
 * 404 Page
 * White Space on Mobile devices
 * Broken titles on thumbnails
+* Support page submenus
