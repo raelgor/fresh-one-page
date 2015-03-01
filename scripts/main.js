@@ -9,18 +9,23 @@ function OnePage(window){
   this.window = window;
 
   // Start the site
-  this.initialize();
+  this.initialize(window);
   console.log('FreshOnePage started.');
 
 }
 
 OnePage.prototype.initialize = function(window){
 
+  var OnePage = this;
+
   // Disable text selection on head
 	document.onselectstart = function(e){
 	   if($(e.target).hasClass('head') || $(e.target).parents('.head').length)
 	    return false;
 	}
+
+	// Disable selection everywhere, apparently
+  window.ondragstart = function(){ return false; }
 
   // Start listening to popstate events
   this.setPopstateHandler();
@@ -34,24 +39,86 @@ OnePage.prototype.initialize = function(window){
   // Get current state
   this.getStateFromUrl();
 
-  //init();
+  // Bind scroll event handler
+  $(window).scroll(function(){
+
+    // Spawn top-scroller
+  	var halfHeight = window.innerHeight/2;
+  	var bodyScroll = $('body').scrollTop();
+  	var htmlScroll = $('html').scrollTop();
+
+  	OnePage.setElementScale(
+  	  '.top-scroller',
+  	  bodyScroll > halfHeight || htmlScroll > halfHeight ? 1:0);
+
+  	// Kill share menu on scroll
+  	var shareMenu = $('.share-menu');
+  	OnePage.setElementScale(shareMenu,0);
+  	setTimeout(function(){ shareMenu.remove(); },500);
+
+  });
+
+  // Bind top-scroller click event handler
+  $('.top-scroller').click(function(){
+
+    $('body,html').animate(
+      {scrollTop:0+'px'},
+      1000,
+      'swing',
+      function(){ OnePage.setElementScale(this,0); }
+    );
+
+  });
+
 
 }
 
-$(window).scroll(function(){
-	($('body').scrollTop() > window.innerHeight/2) || ($('html').scrollTop() > window.innerHeight/2)? $('.top-scroller').css({'-webkit-transform':'scale(1)','-moz-transform':'scale(1)','-o-transform':'scale(1)','-ms-transform':'scale(1)'}) : $('.top-scroller').css({'-webkit-transform':'scale(0)','-moz-transform':'scale(0)','-o-transform':'scale(0)','-ms-transform':'scale(0)'});
-	var tar = $('.share-menu').css({
-						'-webkit-transform':'scale(0)',
-						'-moz-transform':'scale(0)',
-						'-ms-transform':'scale(0)',
-						'-o-transform':'scale(0)'
-					});
-					setTimeout(function(){ tar.remove(); },500);
-});
+OnePage.prototype.setElementScale = function(selector,scale){
+  $(selector).css({
+    '-webkit-transform':'scale(' + scale + ')',
+    '-moz-transform':'scale(' + scale + ')',
+    '-o-transform':'scale(' + scale + ')',
+    '-ms-transform':'scale(' + scale + ')'
+  });
+}
+
+OnePage.prototype.fixSides = function(){
+
+  // Do this manually to increase compatibility
+  $('.side-bg').css('height',$('.container').height() + 'px');
+
+}
+
+// Glue CSS with JavaScript to increase compatibility. Must try a pure CSS
+// solution some time soon though because this is ugly.
+OnePage.prototype.responsive = function(){
+
+	$('.container').css('min-height',window.innerHeight+'px');
+	if( window.innerWidth <= 962 ){
+
+		$('.nav-container').css({
+			position: 'absolute',
+			margin: '154px 0 0 0',
+			left: ( $('.container').width()/2 - $('.nav-container').width()/2 ) + 'px'
+		});
+
+	} else {
+
+		$('.nav-container').css({
+			position: 'relative',
+			margin: '80px 10% 0 0',
+			left: '0px'
+		});
+
+	}
+
+	$('.work').css({height: $('.work').width()*(336/441) + 'px'});
+	this.fixSides();
+
+}
 
 function init(){
 
-	$('.top-scroller').click(function(){ $('body,html').animate({scrollTop:0+'px'},1000,'swing',function(){ $('.top-scroller').css({'-webkit-transform':'scale(0)','-moz-transform':'scale(0)','-o-transform':'scale(0)','-ms-transform':'scale(0)'}); }); });
 
 
 
@@ -104,7 +171,7 @@ function init(){
 	})();
 	!navData || !navData.length && $('.menu-item[data-id="' + settings.DefaultMenu + '"] .title, .menu-item[data-id="' + settings.DefaultMenu + '"] div[data-id="' + settings.DefaultSubMenu + '"]').click();
 
-	window.fixSides = function(){ $('.side-bg').css('height',$('.container').height() + 'px') }
+
 	$('.container').bind('DOMSubtreeModified',false,responsive);
 	fixSides();
 	responsive();
@@ -222,31 +289,7 @@ function showWorks(catID){
 		setTimeout(aniCallback,150);
 }
 
-function responsive(){
 
-	$('.container').css('min-height',window.innerHeight+'px');
-	if( window.innerWidth <= 962 ){
-
-		$('.nav-container').css({
-			position: 'absolute',
-			margin: '154px 0 0 0',
-			left: ( $('.container').width()/2 - $('.nav-container').width()/2 ) + 'px'
-		});
-
-	} else {
-
-		$('.nav-container').css({
-			position: 'relative',
-			margin: '80px 10% 0 0',
-			left: '0px'
-		});
-
-	}
-
-	$('.work').css({height: $('.work').width()*(336/441) + 'px'});
-	fixSides();
-}
-window.ondragstart = function(){ return false }
 
 function navToWork(wid){
 
@@ -371,46 +414,6 @@ function workNavArr(){
 		$('.work-page-holder').animate({left:'0px',opacity:1},150,'swing');
 		(($('body').scrollTop() !=0) || ($('html').scrollTop() !=0)) && $('body,html').animate({scrollTop:0+'px'},1000,'swing');
 	})
-
-}
-
-function showPage(pid){
-
-	$('.indexContent').animate({opacity:0},200,'swing',function(){
-
-		var p = pages.filter(function(a){ return a.id == pid })[0];
-		console.log(pages,pid)
-		$('.indexContent').html('<div class="site-page">' + p.html + '</div>');
-		$('.site-page img').load(function(){ $(this).animate({opacity:1},200,'swing'); fixSides(); });
-
-		$('.send-button').click(function(){
-
-			[$('[name="name"]').val(),$('[name="email"]').val(),$('textarea').val()].indexOf('') != -1 ?
-			$('.error-div').html(settings.ContactFailureMessage)
-			:
-			$.post(
-		'http://www.fresh-ideas.eu/cms/api.php',{
-
-				action:'email',
-				name: $('[name="name"]').val(),
-				email: $('[name="email"]').val(),
-				message: $('textarea').val()
-
-			}).always(function(){
-
-				$('.error-div').html(settings.ContactSuccessMessage).css('color','green');
-				$('.yellow-input,.send-button').css({
-					'opacity':.3,
-					'pointer-events':'none'
-				});
-
-			});
-
-		});
-
-		$('.indexContent').animate({opacity:1},200,'swing');
-
-	});
 
 }
 

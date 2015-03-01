@@ -99,6 +99,40 @@ OnePage.prototype.getStateFromUrl = function(){
     }
   }
 
+  if(type == 0){
+    var mID = siteData.menu.filter(function(m){ return m.type == 0; })[0].id;
+    stateObject.menuState = {
+      menu: mID
+    }
+  }
+
   this.getState(stateObject);
+
+}
+
+// Get the menu where it needs to be
+OnePage.prototype.setMenuState = function(menuState){
+
+  var menuState = menuState || {
+    menu:    siteData.settings.DefaultMenu,
+    submenu: siteData.settings.DefaultSubMenu
+  }
+
+  $('.menu-item .title').removeClass('selected');
+	$('.menu-item .menu-sub').css({
+		'opacity' : 0,
+		'top' : "-5px"
+	}).removeClass('selected');
+
+  var subSelector = menuState.submenu ?
+    '[data-id="' + menuState.submenu + '"].menu-sub' :
+    '.menu-sub:nth-child(2)';
+
+	var menu = $('[data-id="' + menuState.menu + '"].menu-item');
+	menu.find('.title,' + subSelector).addClass('selected');
+	menu.find('.menu-sub').css({
+		'opacity' : 1,
+		'top' : 0
+	});
 
 }

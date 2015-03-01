@@ -59,8 +59,8 @@ OnePage.prototype.menuFactory = function(){
 	  }
 
 	  mData.type == 0 && ( stateObject = {
-	    title: '',
-	    url:   ''
+	    title: 'Fresh Ideas | Advertising Interior Company',
+	    url:   './'
 	  });
 
 	  // Set state
@@ -72,32 +72,56 @@ OnePage.prototype.menuFactory = function(){
 	});
 
   // Handle clicks of sub menus
+  // ...
 
 }
 
-OnePage.prototype.setMenuState = function(menuState){
+OnePage.prototype.setPage = function(alias){
 
-  var menuState = menuState || {
-    menu:    siteData.settings.DefaultMenu,
-    submenu: siteData.settings.DefaultSubMenu
+  var OnePage = this;
+
+  function showPage(){
+
+		var page = siteData.pages.filter(function(p){ return p.alias == alias })[0];
+
+		$('.indexContent').html('<div class="site-page">' + page.html + '</div>');
+
+		// Images always fade in
+		$('.site-page img').load(function(){
+		  $(this).animate({opacity:1},200,'swing'); OnePage.fixSides(); });
+
+    // If contact page make the send button function
+		$('.send-button').click(function(){
+
+      var errorDiv = $('.error-div');
+
+			$('[name="name"]').val() &&
+			$('[name="email"]').val() &&
+			$('textarea').val() ?
+			errorDiv.html(settings.ContactFailureMessage) :
+			$.post(
+		    'http://www.fresh-ideas.eu/cms/api.php',{
+  				action:'email',
+  				name: $('[name="name"]').val(),
+  				email: $('[name="email"]').val(),
+  				message: $('textarea').val()
+			}).always(function(){
+
+				errorDiv.html(settings.ContactSuccessMessage).css('color','green');
+				$('.yellow-input,.send-button').css({
+					'opacity':.3,
+					'pointer-events':'none'
+				});
+
+			});
+
+		});
+
+		$('.indexContent').animate({opacity:1},200,'swing');
+
   }
 
-  $('.menu-item .title').removeClass('selected');
-	$('.menu-item .menu-sub').css({
-		'opacity' : 0,
-		'top' : "-5px"
-	}).removeClass('selected');
-
-	var menu = $('[data-id="' + menuState.menu + '"].menu-item');
-	menu.find('.title,.menu-sub:nth-child(2)').addClass('selected');
-	menu.find('.menu-sub').css({
-		'opacity' : 1,
-		'top' : 0
-	});
-
-}
-
-OnePage.prototype.setPage = function(){
+  $('.indexContent').animate({opacity:0},200,'swing',showPage);
 
 }
 
