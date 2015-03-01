@@ -2,8 +2,8 @@
 A lite One-Page site template.
 
 **TODO**
-* Fix stateful navigation
-* SEF URLs
+* ~~Fix stateful navigation~~
+* ~~SEF URLs~~
 * Image Viewer
 * Associate with Facebook Page
 * Assiciate with Google+ Page
