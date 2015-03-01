@@ -15,3 +15,5 @@ A lite One-Page site template.
 * Analytics
 * ~~The **"null"** bug~~
 * 404 Page
+* White Space on Mobile devices
+* Broken titles on thumbnails
