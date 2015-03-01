@@ -11,7 +11,7 @@ A lite One-Page site template.
 * Image dimention spaceholding
 * Fix meta data for share links
 * Merge and minify CSS and JS
-* Add caching headers and gzip
+* ~~Add caching headers and gzip~~
 * Analytics
 * ~~The **"null"** bug~~
 * 404 Page
