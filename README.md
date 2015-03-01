@@ -13,4 +13,5 @@ A lite One-Page site template.
 * Merge and minify CSS and JS
 * Add caching headers and gzip
 * Analytics
-* The **"null"** bug
+* ~~The **"null"** bug~~
+* 404 Page
