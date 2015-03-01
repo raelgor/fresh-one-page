@@ -33,7 +33,7 @@ RewriteRule ^.*$ http://%{SERVER_NAME}%{REQUEST_URI} [R,L]
 RewriteCond %{HTTP_HOST} ^www\.
 RewriteRule ^(.*)$ http://fresh-ideas.eu [L,R=301]
 
-RewriteRule ^(clients|works|about|contact)$ index.php [NC,L]
+RewriteRule ^(clients|works|about|contact|category)(.*)$ index.php [NC,L]
 
 # RewriteRule ^(.+)\.(png|css|gif|jpg|js|manifest|zip)$ $1.$2 [NC,L]
 # RewriteRule ^(.+)\.php$ $1.php [NC,L,QSA]

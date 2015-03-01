@@ -19,39 +19,57 @@ OnePage.prototype.setPopstateHandler = function(){
 // Get to a page state
 OnePage.prototype.getState = function(stateObject){
 
-  // Set page title
-  window.document.title = stateObject.title ?
-    stateObject.title + ' | Fresh Ideas' :
-    'Fresh Ideas | Advertising Interior Company';
+  var OnePage = this;
 
-  // Restore menu state or get default
-  this.setMenuState(stateObject.menuState);
+  // Check if inital page and animate accordingly
+  $('.indexContent *').length ?
+  $('.indexContent')
+    .animate({opacity:0,left:'-10px'},200,'swing',function(){
+      route.call(OnePage);
+      $(this).animate({opacity:1,left:'0px'},200,'swing');
+    }) : route.call(this);
 
-  // Route to factory
-  stateObject.type == 1 && this.setPage(stateObject.alias);
-  stateObject.type == 2 && this.setWork(stateObject.alias);
+  function route(){
 
-  // Works carousel should start with instructed content or default to
-  // the work's category.
-  stateObject.type == 2 && this.setCarousel(stateObject.worksCarousel);
+    // Set page title
+    window.document.title = stateObject.title ?
+      stateObject.title + ' | Fresh Ideas' :
+      'Fresh Ideas | Advertising Interior Company';
 
-  // Show clients
-  stateObject.type == 3 && this.listClients();
+    // Restore menu state or get default
+    this.setMenuState(stateObject.menuState);
 
-  // Show client page
-  stateObject.type == 4 && this.showClient();
+    // Route to factory
+    stateObject.type == 1 && this.setPage(stateObject.alias);
+    stateObject.type == 2 && this.setCategory(stateObject.alias);
+    stateObject.type == 5 && this.setWork(stateObject.alias);
+
+    // Works carousel should start with instructed content or default to
+    // the work's category.
+    stateObject.type == 5 && this.setCarousel(stateObject.worksCarousel);
+
+    // Show clients
+    stateObject.type == 3 && this.listClients();
+
+    // Show client page
+    stateObject.type == 4 && this.showClient(stateObject.alias);
+
+    // Apparently necessary
+    this.responsive();
+
+  }
 
 }
 
 // Register a new state
 OnePage.prototype.setState = function(stateObject){
 
-  window.history.pushState(stateObject,stateObject.title,stateObject.url);
+  window.history.pushState(stateObject,stateObject.title,ROOT+stateObject.url);
 
 }
 
 // Get state from current URL
-OnePage.prototype.getStateFromUrl = function(){
+OnePage.prototype.getStateFromUrl = function(initial){
 
   var index = 0;
   var type,id;
@@ -62,9 +80,11 @@ OnePage.prototype.getStateFromUrl = function(){
   siteData.pages.forEach(function(page){ pageAliases.push(page.alias); });
 
   window.location.pathname.split('/').forEach(function(anchor){
-    type && ( id = anchor );
+    if(!anchor) return;
+    type && type != 1 && ( id = anchor );
     anchor == "clients"               && ( type =  3 );
-    anchor == "works"                 && ( type =  2 );
+    anchor == "works"                 && ( type =  5 );
+    anchor == "category"              && ( type =  2 );
     pageAliases.indexOf(anchor) != -1 && ( type =  1 ) && ( id = anchor );
     index++;
   });
@@ -78,11 +98,23 @@ OnePage.prototype.getStateFromUrl = function(){
 
   function searchByAlias(p){ return p.alias == id }
 
-  if(type == 1) title = siteData.pages  .filter(searchByAlias)[0].title;
-  if(type == 2) title = siteData.works  .filter(searchByAlias)[0].title;
+  if(type == 1) title = siteData.pages     .filter(searchByAlias)[0].title;
+  if(type == 2){
+    var category = siteData.categories.filter(searchByAlias)[0];
+    title = category.title;
+    stateObject.menuState = {
+      menu:    $('.menu-item:has([data-cat-id="' + category.id + '"])')
+                .attr('data-id'),
+      submenu: $('[data-cat-id="' + category.id + '"].menu-sub')
+                .attr('data-id')
+    }
+  }
   if(type == 3) title = 'Clients';
-  if(type == 4) title = siteData.clients.filter(searchByAlias)[0].title;
-
+  if(type == 4){
+    var client = siteData.clients.filter(searchByAlias)[0];
+    title = client.title;
+    stateObject.alias = client.alias;
+  }
   if([3,4].indexOf(type) != -1){
     stateObject.menuState = {
       menu: siteData.menu.filter(function(m){ return m.type == 3 })[0].id
@@ -106,7 +138,12 @@ OnePage.prototype.getStateFromUrl = function(){
     }
   }
 
+  stateObject.title = title;
   this.getState(stateObject);
+
+  initial &&
+  window.history
+        .replaceState(stateObject,stateObject.title,stateObject.url);
 
 }
 

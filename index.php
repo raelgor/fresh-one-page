@@ -17,23 +17,53 @@ $dbh = new PDO("mysql:host=$host;dbname=$db_name", $user, $pass);
 $dbh->exec("SET NAMES utf8");
 $dbh->exec("SET time_zone = '+2:00'");
 
-$prefix = "alt/";
+$ROOT = "/b/site/";
 
 $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
 $desc = "Fresh Ideas | Advertising Interior Company";
 $title = "Fresh Ideas | Advertising Interior Company";
-$image = "http://www.fresh-ideas.eu/$prefix"."logo.jpg";
+$image = "http://fresh-ideas.eu$ROOT"."images/logo.jpg";
 
-if($_GET['w']){
+$uri = explode('?',$_SERVER["REQUEST_URI"]);
+$uri = explode('/',$uri[0]);
 
-	$q = $dbh->prepare('select title, (select src from images where id = s.image_id) as image_path from works s where id = :id');
-	$q->execute(array(":id"=>$_GET["w"]));
-	$r = $q->fetch(PDO::FETCH_ASSOC);
-	$title = $r["title"];
-	$image = "http://www.fresh-ideas.eu/".$r["image_path"];
+$q = $dbh->prepare('select group_concat(alias) as aliases from pages');
+$q->execute();
+$pageAliases = $q->fetch(PDO::FETCH_ASSOC);
+$pageAliases = explode(',',$pageAliases["aliases"]);
+
+foreach($uri as &$dir){
+
+  if(!$dir) continue;
+  if($directive) $anchor = $dir;
+  $page = array_search($dir,$pageAliases);
+  if($page || $page == 0) break;
+  $directive = array_search($dir,array(
+    "works"    => "works",
+    "clients"  => "clients",
+    "category" => "category"
+  ));
 
 }
+
+if(($directive && $anchor) || !is_nan($page)){
+
+  if($directive == "works")    $query = 'select title, (select src from images where id = s.image_id) as image_path from works s where alias = :alias';
+  if($directive == "clients")  $query = 'select title, (select src from images where id = s.image_id) as image_path from clients s where alias = :alias';
+  if($directive == "category") $query = 'select title from categories s where alias = :alias';
+
+	$q = $dbh->prepare($query);
+	$q->execute(array(":alias"=>$anchor));
+	$r = $q->fetch(PDO::FETCH_ASSOC);
+
+	$title = $r["title"] . " | Fresh Ideas";
+
+	is_nan($page) && !$directive == "category" && $image = "http://www.fresh-ideas.eu".$r["image_path"];
+
+}
+
+if($directive && !$anchor) $title = "Clients | Fresh Ideas";
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -111,11 +141,13 @@ $clients = $q->fetchall(PDO::FETCH_ASSOC);
     clients: <?=json_encode($clients)?>
   }
 
+  var ROOT = '<?=$ROOT?>';
+
 </script>
-<link href="styles.css" rel="stylesheet" type="text/css" />
+<link href="<?=$ROOT?>styles.css" rel="stylesheet" type="text/css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="jsbinder.php"></script>
-<link rel="shortcut icon" href="images/favicon.ico">
+<script src="<?=$ROOT?>jsbinder.php"></script>
+<link rel="shortcut icon" href="<?=$ROOT?>images/favicon.ico">
 </head>
 <body>
 
@@ -130,15 +162,7 @@ $clients = $q->fetchall(PDO::FETCH_ASSOC);
     <div class="copyright-date">&copy;<?=date('Y')?> fresh-ideas</div>
 </div>
 <div class="side-bg"></div>
-<div class="preloader">
-	<img scr="images/social.png" />
-	<img scr="images/arrow_left_normal.png" />
-	<img scr="images/arrow_left_hover.png" />
-	<img scr="images/arrow_right_normal.png" />
-	<img scr="images/arrow_right_hover.png" />
-	<img scr="images/button_contact_active.png" />
-</div>
-<img src="images/back_to_top.png" class="top-scroller ani05" />
+<img src="<?=$ROOT?>images/back_to_top.png" class="top-scroller ani05" />
 
 <script>
 var isiPad = navigator.userAgent.match(/iPad/i) != null;

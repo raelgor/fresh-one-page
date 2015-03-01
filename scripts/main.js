@@ -36,8 +36,8 @@ OnePage.prototype.initialize = function(window){
   // Create menu
   this.menuFactory();
 
-  // Get current state
-  this.getStateFromUrl();
+  // Get current state amd replace state object because we just came here
+  this.getStateFromUrl(1);
 
   // Bind scroll event handler
   $(window).scroll(function(){
@@ -65,11 +65,10 @@ OnePage.prototype.initialize = function(window){
       {scrollTop:0+'px'},
       1000,
       'swing',
-      function(){ OnePage.setElementScale(this,0); }
+      function(){ OnePage.setElementScale('.top-scroller',0); }
     );
 
   });
-
 
 }
 
@@ -117,22 +116,62 @@ OnePage.prototype.responsive = function(){
 
 }
 
+OnePage.prototype.getShareHTML = function(work){
+
+  var URL = 'http://fresh-ideas.eu' + ROOT + 'works/' + work.alias;
+  var src = siteData.images.filter(function(i){
+            return i.id == work.image_id; })[0].src;
+
+  return '<a href="https://twitter.com/intent/tweet?text=' + URL +
+         '" target="_blank"></a>' +
+		     '<a href="https://www.facebook.com/sharer/sharer.php?u=' + URL +
+		     '" target="_blank"></a>' +
+		     '<a href="mailto:?subject=Fresh Ideas Project&X-Mailer=Baluba&body=' +
+		     URL + '" target="_blank"></a>' +
+		     '<a href="http://www.pinterest.com/pin/create/bookmarklet/?url=' +
+		     URL + '&description=Fresh Ideas Project&image_url=' +
+		     'http://fresh-ideas.eu' + ROOT + src +
+		     '" target="_blank"></a>' +
+		     '<a href="https://plus.google.com/share?url=' + URL +
+		     '&hl=en-US" target="_blank"></a>' +
+		     '<a href="http://tumblr.com/share?s=&v=3&t=Fresh%20Ideas%20Project&u='+
+		     URL + '" target="_blank"></a>';
+
+}
+
+OnePage.prototype.shareMouseOver = function(work,coords){
+
+  // Brain fart
+  var OnePage = window.OnePage.prototype;
+
+	var shareMenus = $('.share-menu');
+	OnePage.setElementScale(shareMenus,0);
+	setTimeout(function(){ shareMenus.remove(); },500);
+
+	var shareHTML = OnePage.getShareHTML(work);
+
+	$('body')
+	  .append('<div class="share-menu ani05">'+shareHTML+'</div>')
+	  .find('.share-menu:last-of-type')
+	  .css({top:coords.top,left:coords.left})
+	  .find('a')
+	  .bind("mouseout click",function(e){
+	if($(e.toElement).is('.share-menu a') && e.type != "click") return;
+
+	var shareMenus = $('.share-menu');
+	OnePage.setElementScale(shareMenus,0);
+	setTimeout(function(){ shareMenus.remove(); },500); });
+	setTimeout(function(){
+	  OnePage.setElementScale('.share-menu:last-of-type',1)},100);
+
+}
+
 function init(){
 
 
 
 
 
-	$('.menu-item .menu-sub').click(function(){
-		window.navSM = $(this).attr('data-id');
-		$('.menu-item .menu-sub').removeClass('selected');
-		$(this).addClass('selected');
-		$(this).attr('data-type') == "2" && showWorks($(this).attr('data-cat-id'));
-		$(this).attr('data-type') == "1" && showPage($(this).attr('data-cat-id'));
-		$(this).attr('data-type') == "3" && clientsPage($(this).attr('data-cat-id'));
-		!vir && window.history.pushState({navM:navM,navSM:navSM},'','?m=' +  window.navM + '&sm=' + window.navSM);
-		vir = false;
-	});
 
 
 	console.log(settings,navData)
@@ -178,116 +217,6 @@ function init(){
 	window.onresize = responsive;
 }
 
-function showWorks(catID){
-		window.NavOnClient = false;
-		function aniCallback(){
-			var holder = $('.indexContent').html('<div class="work-holder"></div>').find('.work-holder');
-			var category = workCategories.filter(function(a){ return a.id == catID || catID == "0" })[0];
-
-			if( !category ) throw "Invalid category ID. Failed to display works.";
-
-			category.works.forEach(function(wid){
-
-				var work = worksData.filter(function(a){ return a.id == wid })[0];
-
-				src = "http://fresh-ideas.eu/";
-
-				category_title = '';
-				workCategories.forEach(function(cw){
-
-					if(["Archive","All"].indexOf(cw.title) != -1) return;
-					cw.works.indexOf(work.id) != -1 && (category_title = cw.title);
-
-				});
-
-				try{ src += images.filter(function(i){ return i.id == work.image_id })[0].src }catch(x){}
-
-				var element = document.createElement('div');
-				$(element).attr('data-id',work.id).addClass('work').html('<div class="mainImage"></div><div class="shadow"></div>').find('.mainImage')
-				.html(
-					'<div class="infobar ani02"><a class="share"></a><a class="like"></a>' + work.title + '<span>' + category_title + '</span></div>' +
-					'<img class="ani02" src="' + src + '" style="width:100%; height:100%;" />'
-				)
-				.find('img').load(function(){ $(this).parents('.work').animate({opacity:'1'},250,'swing'); })
-				;
-
-				$(element).find('.like').mouseover(function(){
-
-					if($(this).hasClass('liked')) return;
-					var coords = $(this).offset();
-					$('body').append('<div class="hover-thumbs">Like</div>').find('.hover-thumbs').css({top:coords.top,left:coords.left});
-
-				}).mouseout(function(){ $('.hover-thumbs').remove(); }).click(function(){
-
-					$(this).addClass('liked');
-					$('.hover-thumbs').remove();
-					$.post('http://www.fresh-ideas.eu/cms/api.php',{
-						action_like_works:1,
-						wid:$(this).parents('.work').attr('data-id')
-					});
-
-				});
-
-				$(element).find('.share').mouseover(function(){
-
-					var tar = $('.share-menu').css({
-						'-webkit-transform':'scale(0)',
-						'-moz-transform':'scale(0)',
-						'-ms-transform':'scale(0)',
-						'-o-transform':'scale(0)'
-					});
-					setTimeout(function(){ tar.remove(); },500);
-					var shareHTML =
-					'<a class="dlfix" href="https://twitter.com/intent/tweet?text=http://www.fresh-ideas.eu/'+_prefix+'?w=' + $(this).parents('.work').attr('data-id') + '" target="_blank"></a>'+
-					'<a class="dlfix" href="https://www.facebook.com/sharer/sharer.php?u=http://www.fresh-ideas.eu/' + _prefix + '?w=' + $(this).parents('.work').attr('data-id') + '" target="_blank"></a>' +
-					'<a class="dlfix" href="mailto:?subject=Fresh Ideas Project&X-Mailer=Baluba&body=http://www.fresh-ideas.eu/' + _prefix + '?w=' + $(this).parents('.work').attr('data-id') + '" target="_blank"></a>' +
-					'<a class="dlfix" href="http://www.pinterest.com/pin/create/bookmarklet/?url=http://www.fresh-ideas.eu/' + _prefix + '?w=' + $(this).parents('.work').attr('data-id') + '&description=Fresh Ideas Project&image_url=' + $(this).parents('.work').find('img')[0].src + '" target="_blank"></a>' +
-					'<a class="dlfix" href="https://plus.google.com/share?url=http://www.fresh-ideas.eu/' + _prefix + '?w=' + $(this).parents('.work').attr('data-id') + '&hl=en-US" target="_blank"></a>' +
-					'<a class="dlfix" href="http://tumblr.com/share?s=&v=3&t=Fresh%20Ideas%20Project&u=http%3A%2F%2Fwww.fresh-ideas.eu%2F' + _prefix + '%3Fw%3D' + $(this).parents('.work').attr('data-id') + '" target="_blank"></a>';
-					var coords = $(this).offset();
-					$('body').append('<div class="share-menu ani05">' + shareHTML + '</div>').find('.share-menu:last-of-type').css({ top: coords.top - 5, left: coords.left }).find('a');$('.share-menu').bind("mouseout click",function(e){
-					    console.log(e);
-					    if (($(e.relatedTarget).is('.share-menu a') || $(e.relatedTarget).is('.share-menu')) && e.type != "click") return;
-					var tar = $('.share-menu').css({
-						'-webkit-transform':'scale(0)',
-						'-moz-transform':'scale(0)',
-						'-ms-transform':'scale(0)',
-						'-o-transform':'scale(0)'
-					});
-					setTimeout(function(){ tar.remove(); },500); });
-					setTimeout(function(){ $('.share-menu:last-of-type').css({
-						'-webkit-transform':'scale(1)',
-						'-moz-transform':'scale(1)',
-						'-ms-transform':'scale(1)',
-						'-o-transform':'scale(1)'
-					}); },100);
-
-				});
-
-				$(element).click(function(e){
-
-					if($(e.target).is(':not(.like,.share)')){
-						window.history.pushState({navM:navM,navSM:navSM,w:$(this).attr('data-id')},'','?m=' +  window.navM + '&sm=' + window.navSM + '&w=' + $(this).attr('data-id'));
-						$('.indexContent').animate({opacity:0},200,'swing',function(){
-
-							$(this).html('<div class="right-arrow"></div><div class="left-arrow"></div>').find('.left-arrow,.right-arrow').click(workNavArr);
-							navToWork(wid);
-							$(this).animate({opacity:1},200);
-
-						});
-					}
-
-				});
-
-				holder.append(element);
-				$(element).css({height: $(element).width()*(336/441) + 'px'});
-
-			});
-			$(holder).animate({opacity:1},250,'swing');
-		}
-		$('.indexContent>*').animate({opacity:0},150,'swing');
-		setTimeout(aniCallback,150);
-}
 
 
 
@@ -417,165 +346,6 @@ function workNavArr(){
 
 }
 
-function clientsPage(cid){
-
-	$('.indexContent').animate({opacity:0},200,'swing',function(){
-
-		var p = clients.filter(function(a){ return a.id == cid })[0];
-
-		$('.indexContent').html('<h1>Clients</h1><div class="c-pool"></div>');
-
-		clients.forEach(function(c){
-
-			var el = document.createElement('img');
-			var img = '';
-			try{ img = images.filter(function(r){ return r.id == c.thumbnail_baw_id })[0].src } catch (x) {}
-
-			$(el).addClass('listed-client ani02 hidden').attr('src','http://www.fresh-ideas.eu/'+img).attr('data-id',c.id);
-			$(el).click(function(){
-				window.history.pushState({navM:navM,navSM:navSM,c:c.id},'','?m=' +  window.navM + '&sm=' + window.navSM + '&c=' + c.id);
-				$('.indexContent').animate({opacity:0},200,'swing',function(){
-
-					$(this).html('<div class="right-arrow"></div><div class="left-arrow"></div>').find('.left-arrow,.right-arrow').click(clientNavArr);
-
-					window.NavOnClient = c.id;
-					navToClient(c.id);
-					$(this).animate({opacity:1},200);
-
-				});
-			});
-
-			$('.c-pool').append(el);
-
-		});
-
-
-		$('img.listed-client').load(function(){ $(this).removeClass('hidden'); fixSides(); });
-
-		$('.indexContent').animate({opacity:1},200,'swing');
-
-	});
-
-}
-
-function navToClient(wid){
-
-	try{
-		work = clients.filter(function(w){ return w.id == wid })[0];
-	} catch(x){
-		throw 'Display 404 page.';
-	}
-	$('.work-page-holder').remove();
-	$('.indexContent').append('<div class="work-page-holder" data-id="'+work.id+'">' + work.html + '<div class="works-pool cl"></div></div>');
-
-	worksData.filter(function(a){ return a.client_id == wid  }).sort(function(a,b){ return b.index - a.index }).forEach(function(a){
-
-		var category = workCategories.filter(function(n){ return n.works.indexOf(a.id) != -1 && ["All","Archive"].indexOf(n.title)==-1; })[0];
-
-		holder = $('.works-pool');
-		category && category.works.forEach(function(wid){
-			if(wid != a.id) return;
-			var work = worksData.filter(function(a){ return a.id == wid })[0];
-
-			src = "http://fresh-ideas.eu/";
-
-			category_title = '';
-			workCategories.forEach(function(cw){
-
-				if(["Archive","All"].indexOf(cw.title) != -1) return;
-				cw.works.indexOf(work.id) != -1 && (category_title = cw.title);
-
-			});
-
-			try{ src += images.filter(function(i){ return i.id == work.image_id })[0].src }catch(x){}
-
-			var element = document.createElement('div');
-			$(element).attr('data-id',work.id).addClass('work').html('<div class="mainImage"></div><div class="shadow"></div>').find('.mainImage')
-			.html(
-				'<div class="infobar ani02"><a class="share"></a><a class="like"></a>' + work.title + '<span>' + category_title + '</span></div>' +
-				'<img class="ani02" src="' + src + '" style="width:100%; height:100%;" />'
-			)
-			.find('img').load(function(){ $(this).parents('.work').animate({opacity:'1'},250,'swing'); })
-			;
-
-			$(element).find('.like').mouseover(function(){
-
-				if($(this).hasClass('liked')) return;
-				var coords = $(this).offset();
-				$('body').append('<div class="hover-thumbs">Like</div>').find('.hover-thumbs').css({top:coords.top,left:coords.left});
-
-			}).mouseout(function(){ $('.hover-thumbs').remove(); }).click(function(){
-
-				$(this).addClass('liked');
-				$('.hover-thumbs').remove();
-				$.post('http://www.fresh-ideas.eu/cms/api.php',{
-					action_like_works:1,
-					wid:$(this).parents('.work').attr('data-id')
-				});
-
-			});
-
-			$(element).find('.share').mouseover(function(){
-					var tar = $('.share-menu').css({
-						'-webkit-transform':'scale(0)',
-						'-moz-transform':'scale(0)',
-						'-ms-transform':'scale(0)',
-						'-o-transform':'scale(0)'
-					});
-					setTimeout(function(){ tar.remove(); },500);
-					var shareHTML =
-					'<a href="https://twitter.com/intent/tweet?text=http://www.fresh-ideas.eu/'+_prefix+'?w=' + $(this).parents('.work').attr('data-id') + '" target="_blank"></a>'+
-					'<a href="https://www.facebook.com/sharer/sharer.php?u=http://www.fresh-ideas.eu/'+_prefix+'?w=' + $(this).parents('.work').attr('data-id') + '" target="_blank"></a>'+
-					'<a href="mailto:?subject=Fresh Ideas Project&X-Mailer=Baluba&body=http://www.fresh-ideas.eu/'+_prefix+'?w=' + $(this).parents('.work').attr('data-id') + '" target="_blank"></a>'+
-					'<a href="http://www.pinterest.com/pin/create/bookmarklet/?url=http://www.fresh-ideas.eu/'+_prefix+'?w=' + $(this).parents('.work').attr('data-id') + '&description=Fresh Ideas Project&image_url='+$(this).parents('.work').find('img')[0].src+'" target="_blank"></a>'+
-					'<a href="https://plus.google.com/share?url=http://www.fresh-ideas.eu/'+_prefix+'?w=' + $(this).parents('.work').attr('data-id') + '&hl=en-US" target="_blank"></a>'+
-					'<a href="http://tumblr.com/share?s=&v=3&t=Fresh%20Ideas%20Project&u=http%3A%2F%2Fwww.fresh-ideas.eu%2F'+_prefix+'%3Fw%3D' + $(this).parents('.work').attr('data-id') + '" target="_blank"></a>';
-					var coords = $(this).offset();
-					$('body').append('<div class="share-menu ani05">'+shareHTML+'</div>').find('.share-menu:last-of-type').css({top:coords.top,left:coords.left}).find('a').bind("mouseout click",function(e){
-					if($(e.toElement).is('.share-menu a') && e.type != "click") return;
-					var tar = $('.share-menu').css({
-						'-webkit-transform':'scale(0)',
-						'-moz-transform':'scale(0)',
-						'-ms-transform':'scale(0)',
-						'-o-transform':'scale(0)'
-					});
-					setTimeout(function(){ tar.remove(); },500); });
-					setTimeout(function(){ $('.share-menu:last-of-type').css({
-						'-webkit-transform':'scale(1)',
-						'-moz-transform':'scale(1)',
-						'-ms-transform':'scale(1)',
-						'-o-transform':'scale(1)'
-					}); },100);
-
-				});
-
-			$(element).click(function(e){
-
-				if($(e.target).is(':not(.like,.share)')){
-					window.history.pushState({navM:navM,navSM:navSM,w:$(this).attr('data-id')},'','?m=' +  window.navM + '&sm=' + window.navSM + '&w=' + $(this).attr('data-id'));
-					$('.indexContent').animate({opacity:0},200,'swing',function(){
-
-						$(this).html('<div class="right-arrow"></div><div class="left-arrow"></div>').find('.left-arrow,.right-arrow').click(workNavArr);
-						navToWork(wid);
-						$(this).animate({opacity:1},200);
-
-					});
-				}
-
-			});
-
-			holder.append(element);
-			$(element).css({height: $(element).width()*(336/441) + 'px'});
-
-		});
-
-
-
-
-	});
-
-	$('.work-page-holder img').load(function(){ $(this).animate({opacity:1},200,'swing'); fixSides(); });
-}
 
 function clientNavArr(){
 
