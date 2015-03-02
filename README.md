@@ -19,3 +19,4 @@ A lite One-Page site template.
 * Broken titles on thumbnails
 * ~~Support page submenus~~
 * Support old links
+* Contact form: check for empty fields
