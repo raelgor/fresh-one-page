@@ -162,6 +162,9 @@ OnePage.prototype.setPage = function(alias){
 
 		$('.indexContent').animate({opacity:1},200,'swing');
 
+		// Farting against the brain fart to push it back in
+		setTimeout(function(){ OnePage.responsive() },1000);
+
   }
 
   $('.indexContent').animate({opacity:0},200,'swing',showPage);
