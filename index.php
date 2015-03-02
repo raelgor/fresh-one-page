@@ -1,5 +1,6 @@
 <?php
 
+// God please watch over this code. Amen.
 error_reporting(E_ALL ^ E_NOTICE);
 
 // Connection
@@ -23,7 +24,7 @@ $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
 $desc = "Fresh Ideas | Advertising Interior Company";
 $title = "Fresh Ideas | Advertising Interior Company";
-$image = "http://fresh-ideas.eu$ROOT"."images/logo.jpg";
+$image = "http://fresh-ideas.eu$ROOT"."images/ogdefault.jpg";
 
 $uri = explode('?',$_SERVER["REQUEST_URI"]);
 $uri = explode('/',$uri[0]);
@@ -33,12 +34,28 @@ $q->execute();
 $pageAliases = $q->fetch(PDO::FETCH_ASSOC);
 $pageAliases = explode(',',$pageAliases["aliases"]);
 
+//$debug = '';
+
 foreach($uri as &$dir){
 
+  //$debug .= ':' . $dir . ':';
+
   if(!$dir) continue;
-  if($directive) $anchor = $dir;
+
+  //$debug .= '$dir exists|';
+
+  if($directive){ $anchor = $dir; break; }
+
+  //$debug .= '$directive doesnt exist|';
+
   $page = array_search($dir,$pageAliases);
-  if($page || $page == 0) break;
+
+  //$debug .= '$page ' . (string)$page . ": " . (is_nan($page)?'true':'false') . "|";
+
+  if(!is_nan($page) && $page != null){ $anchor = $pageAliases[$page]; break; }
+
+  //$debug .= '$page doesnt exist|';
+
   $directive = array_search($dir,array(
     "works"    => "works",
     "clients"  => "clients",
@@ -47,19 +64,24 @@ foreach($uri as &$dir){
 
 }
 
-if(($directive && $anchor) || !is_nan($page)){
+//$debug .= ':';
 
-  if($directive == "works")    $query = 'select title, (select src from images where id = s.image_id) as image_path from works s where alias = :alias';
-  if($directive == "clients")  $query = 'select title, (select src from images where id = s.image_id) as image_path from clients s where alias = :alias';
+if(($directive && $anchor) || (!is_nan($page) && $page != null )){
+
+  if($directive == "works")    $query = 'select title, (select src from images where id = s.image_id)         as image_path from works   s where alias = :alias';
+  if($directive == "clients")  $query = 'select title, (select src from images where id = s.thumbnail_baw_id) as image_path from clients s where alias = :alias';
   if($directive == "category") $query = 'select title from categories s where alias = :alias';
+  if($page != null && !is_nan($page)) $query = 'select title from pages s where alias = :alias';
 
 	$q = $dbh->prepare($query);
 	$q->execute(array(":alias"=>$anchor));
 	$r = $q->fetch(PDO::FETCH_ASSOC);
 
+  //$desc = $directive . " :: " .  $anchor . " :: " . $page . " :: " . $_SERVER["REQUEST_URI"] . " :: " . implode("",explode('"',json_encode($pageAliases))) . "|DebugStart|" . $debug;
+
 	$title = $r["title"] . " | Fresh Ideas";
 
-	is_nan($page) && !$directive == "category" && $image = "http://www.fresh-ideas.eu".$r["image_path"];
+	(is_nan($page) || $page == null) && $directive != "category" && ($image = "http://www.fresh-ideas.eu/".$r["image_path"]);
 
 }
 
@@ -70,7 +92,7 @@ if($directive && !$anchor) $title = "Clients | Fresh Ideas";
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta content='width=device-width, initial-scale=0.5, maximum-scale=2.5, user-scalable=1' name='viewport' />
-<title>Fresh Ideas | Advertising Interior Company</title>
+<title><?=$title?></title>
 <meta name="title" content="Fresh Ideas">
 <meta name="description" content="<?=$desc?>">
 <meta name="keywords" content="fresh ideas, patras">

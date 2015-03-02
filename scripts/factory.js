@@ -141,14 +141,16 @@ OnePage.prototype.setPage = function(alias){
 			$('textarea').val() ?
 			errorDiv.html(settings.ContactFailureMessage) :
 			$.post(
-		    'http://www.fresh-ideas.eu/cms/api.php',{
+		    '/cms/api.php',{
   				action:'email',
   				name: $('[name="name"]').val(),
   				email: $('[name="email"]').val(),
   				message: $('textarea').val()
 			}).always(function(){
 
-				errorDiv.html(settings.ContactSuccessMessage).css('color','green');
+				errorDiv.html(siteData.settings.ContactSuccessMessage)
+				        .css('color','green');
+
 				$('.yellow-input,.send-button').css({
 					'opacity':.3,
 					'pointer-events':'none'
