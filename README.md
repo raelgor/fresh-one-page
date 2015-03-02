@@ -23,3 +23,4 @@ A lite One-Page site template.
 * ~~Arrow key shortcuts~~
 * Share menu on Firefox bug
 * ~~Swipe navigation for works~~
+* CMS display image file size
