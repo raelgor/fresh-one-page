@@ -151,6 +151,7 @@ $q = $dbh->prepare('select * from `clients` order by `index`');
 $q->execute();
 $clients = $q->fetchall(PDO::FETCH_ASSOC);
 ?>
+<link href="<?=$ROOT?>styles.css" rel="stylesheet" type="text/css" />
 <script>
 
   var siteData = {
@@ -174,7 +175,6 @@ $clients = $q->fetchall(PDO::FETCH_ASSOC);
   ga('send', 'pageview');
 
 </script>
-<link href="<?=$ROOT?>styles.css" rel="stylesheet" type="text/css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="<?=$ROOT?>jsbinder.php"></script>
 <link rel="shortcut icon" href="<?=$ROOT?>images/favicon.ico">

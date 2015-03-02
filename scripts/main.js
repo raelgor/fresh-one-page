@@ -78,6 +78,20 @@ OnePage.prototype.initialize = function(window){
 
   });
 
+  // Key bind shortcuts
+  $(window).keydown(function(e){
+
+    if(!$(':focus').length){
+      e.keyCode == 39 && $('.right-arrow').click();
+      e.keyCode == 37 && $('.left-arrow') .click();
+    }
+
+  });
+
+  // Cancel scroll animation if scroll caused by user
+  // NOTE: Will most likely not work with touch. Must add touch event.
+  $(window).on("mousewheel",function(){$('html,body').stop()})
+
 }
 
 OnePage.prototype.setElementScale = function(selector,scale){
@@ -171,5 +185,17 @@ OnePage.prototype.shareMouseOver = function(work,coords){
 	setTimeout(function(){ shareMenus.remove(); },500); });
 	setTimeout(function(){
 	  OnePage.setElementScale('.share-menu:last-of-type',1)},100);
+
+}
+
+OnePage.prototype.onSwipe = function(element,direction,callback){
+
+  var swipe = new Hammer.Manager( $(element)[0] );
+
+	swipe.add(new Hammer
+	              .Swipe({velocity:.001,direction: Hammer.DIRECTION_HORIZONTAL}));
+
+	swipe.on('swipe' + direction, function(e){
+	                    callback.call( $(element)[0] , e ); });
 
 }

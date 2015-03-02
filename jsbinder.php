@@ -8,6 +8,8 @@ header("Content-type: text/javascript");
 
 $js = array();
 
+array_push($js,file_get_contents('scripts/hammer.js'));
+array_push($js,file_get_contents('scripts/mousewheel.js'));
 array_push($js,file_get_contents('scripts/main.js'));
 array_push($js,file_get_contents('scripts/states.js'));
 array_push($js,file_get_contents('scripts/preloader.js'));

@@ -40,7 +40,7 @@ OnePage.prototype.getState = function(stateObject){
       'Fresh Ideas | Advertising Interior Company';
 
     // Restore menu state or get default
-    this.setMenuState(stateObject.menuState);
+    stateObject.type != 5 && this.setMenuState(stateObject.menuState);
 
     // Route to factory
     stateObject.type == 1 && this.setPage(stateObject.alias);
