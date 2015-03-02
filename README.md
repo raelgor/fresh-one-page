@@ -12,7 +12,7 @@ A lite One-Page site template.
 * ~~Fix meta data for share links~~
 * Merge and minify CSS and JS
 * ~~Add caching headers and gzip~~
-* Analytics
+* ~~Analytics~~
 * ~~The **"null"** bug~~
 * 404 Page
 * White Space on Mobile devices
