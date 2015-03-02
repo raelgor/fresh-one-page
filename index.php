@@ -18,7 +18,7 @@ $dbh = new PDO("mysql:host=$host;dbname=$db_name", $user, $pass);
 $dbh->exec("SET NAMES utf8");
 $dbh->exec("SET time_zone = '+2:00'");
 
-$ROOT = "/b/site/";
+$ROOT = $config["root"];
 
 $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
