@@ -10,7 +10,7 @@ A lite One-Page site template.
 * ~~Create Google+ Page~~
 * Image dimention spaceholding
 * ~~Fix meta data for share links~~
-* Merge and minify CSS and JS
+* Merge and minify CSS and JS via config file
 * ~~Add caching headers and gzip~~
 * ~~Analytics~~
 * ~~The **"null"** bug~~
