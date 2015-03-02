@@ -136,10 +136,10 @@ OnePage.prototype.setPage = function(alias){
 
       var errorDiv = $('.error-div');
 
-			$('[name="name"]').val() &&
-			$('[name="email"]').val() &&
-			$('textarea').val() ?
-			errorDiv.html(settings.ContactFailureMessage) :
+			!$('[name="name"]').val() ||
+			!$('[name="email"]').val() ||
+			!$('textarea').val() ?
+			errorDiv.html(siteData.settings.ContactFailureMessage) :
 			$.post(
 		    '/cms/api.php',{
   				action:'email',
