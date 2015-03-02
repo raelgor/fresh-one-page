@@ -26,6 +26,16 @@ $desc = "Fresh Ideas | Advertising Interior Company";
 $title = "Fresh Ideas | Advertising Interior Company";
 $image = "http://fresh-ideas.eu$ROOT"."images/ogdefault.jpg";
 
+if($_GET["w"]){
+
+  $q = $dbh->prepare('select alias from works where id = :id');
+  $q->execute(array(":id"=>$_GET["w"]));
+  $r = $q->fetch(PDO::FETCH_ASSOC);
+  header('Location: http://fresh-ideas.eu/works/'.$r["alias"]);
+  exit();
+
+}
+
 $uri = explode('?',$_SERVER["REQUEST_URI"]);
 $uri = explode('/',$uri[0]);
 
