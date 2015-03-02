@@ -6,7 +6,7 @@ A lite One-Page site template.
 * ~~SEF URLs~~
 * Image Viewer
 * ~~Associate with Facebook Page~~
-* Assiciate with Google+ Page
+* Associate with Google+ Page
 * ~~Create Google+ Page~~
 * Image dimention spaceholding
 * ~~Fix meta data for share links~~
@@ -20,5 +20,5 @@ A lite One-Page site template.
 * Support page submenus
 * Support old links
 * Contact form: check for empty fields
-* Arrow key shortcuts
+* ~~Arrow key shortcuts~~
 * Share menu on Firefox bug
