@@ -207,6 +207,12 @@ OnePage.prototype.setWork = function(alias){
 
 	});
 
+  OnePage.onSwipe($('.work-page-holder'),'right',function(){
+                                          $('.left-arrow').click(); });
+
+  OnePage.onSwipe($('.work-page-holder'),'left',function(){
+                                          $('.right-arrow').click(); });
+
 	$('.work-page-holder img').load(function(){
 	      $(this).animate({opacity:1},200,'swing'); OnePage.fixSides(); });
 
@@ -394,7 +400,11 @@ OnePage.prototype.setCategory = function(alias){
             title: work.title,
             type: 5,
             alias: work.alias,
-            worksCarousel: carousel
+            worksCarousel: carousel,
+            menuState: {
+              menu:    $('.menu-item:has(.selected)').attr('data-id'),
+              submenu: $('.menu-sub.selected').attr('data-id')
+            }
           });
 
           OnePage.getStateFromUrl();
