@@ -22,3 +22,4 @@ A lite One-Page site template.
 * Contact form: check for empty fields
 * ~~Arrow key shortcuts~~
 * Share menu on Firefox bug
+* ~~Swipe navigation for works~~
