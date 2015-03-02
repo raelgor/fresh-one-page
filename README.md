@@ -18,7 +18,7 @@ A lite One-Page site template.
 * White Space on Mobile devices
 * Broken titles on thumbnails
 * Support page submenus
-* Support old links
+* ~~Support old links~~
 * Contact form: check for empty fields
 * ~~Arrow key shortcuts~~
 * Share menu on Firefox bug
