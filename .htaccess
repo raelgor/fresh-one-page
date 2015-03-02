@@ -1,4 +1,4 @@
-<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)$">
+<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|ttf|woff)$">
     Header set Cache-Control "max-age=290304000, public"
 </FilesMatch>
 
@@ -31,10 +31,11 @@ RewriteCond %{HTTPS} =on
 RewriteRule ^.*$ http://%{SERVER_NAME}%{REQUEST_URI} [R,L]
 
 RewriteCond %{HTTP_HOST} ^www\.
-RewriteRule ^(.*)$ http://fresh-ideas.eu [L,R=301]
+RewriteRule ^/(.*)$ http://fresh-ideas.eu/$1 [L,R=301]
 
-#RewriteRule usrmedia/(.+)$ image.php?url=$1 [NC,L]
-#RewriteRule ^(.+)\.(png|css|gif|jpg|js|manifest|zip)$ $1.$2 [NC,L]
-#RewriteRule ^(.+)\.php$ $1.php [NC,L,QSA]
-#RewriteRule $ index.php [NC,L]
+RewriteRule ^(clients|works|about|contact|category)(.*)$ index.php [NC,L]
+
+# RewriteRule ^(.+)\.(png|css|gif|jpg|js|manifest|zip)$ $1.$2 [NC,L]
+# RewriteRule ^(.+)\.php$ $1.php [NC,L,QSA]
+# RewriteRule $ index.php [NC,L]
 

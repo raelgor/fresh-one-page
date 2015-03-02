@@ -1,5 +1,6 @@
 <?php
 
+// God please watch over this code. Amen.
 error_reporting(E_ALL ^ E_NOTICE);
 
 // Connection
@@ -17,30 +18,81 @@ $dbh = new PDO("mysql:host=$host;dbname=$db_name", $user, $pass);
 $dbh->exec("SET NAMES utf8");
 $dbh->exec("SET time_zone = '+2:00'");
 
-$prefix = "alt/";
+$ROOT = "/b/site/";
 
 $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
 $desc = "Fresh Ideas | Advertising Interior Company";
 $title = "Fresh Ideas | Advertising Interior Company";
-$image = "http://www.fresh-ideas.eu/$prefix"."logo.jpg";
+$image = "http://fresh-ideas.eu$ROOT"."images/ogdefault.jpg";
 
-if($_GET['w']){
+$uri = explode('?',$_SERVER["REQUEST_URI"]);
+$uri = explode('/',$uri[0]);
 
-	$q = $dbh->prepare('select title, (select src from images where id = s.image_id) as image_path from works s where id = :id');
-	$q->execute(array(":id"=>$_GET["w"]));
-	$r = $q->fetch(PDO::FETCH_ASSOC);
-	$title = $r["title"];
-	$image = "http://www.fresh-ideas.eu/".$r["image_path"];
+$q = $dbh->prepare('select group_concat(alias) as aliases from pages');
+$q->execute();
+$pageAliases = $q->fetch(PDO::FETCH_ASSOC);
+$pageAliases = explode(',',$pageAliases["aliases"]);
+
+//$debug = '';
+
+foreach($uri as &$dir){
+
+  //$debug .= ':' . $dir . ':';
+
+  if(!$dir) continue;
+
+  //$debug .= '$dir exists|';
+
+  if($directive){ $anchor = $dir; break; }
+
+  //$debug .= '$directive doesnt exist|';
+
+  $page = array_search($dir,$pageAliases);
+
+  //$debug .= '$page ' . (string)$page . ": " . (is_nan($page)?'true':'false') . "|";
+
+  if(!is_nan($page) && $page != null){ $anchor = $pageAliases[$page]; break; }
+
+  //$debug .= '$page doesnt exist|';
+
+  $directive = array_search($dir,array(
+    "works"    => "works",
+    "clients"  => "clients",
+    "category" => "category"
+  ));
 
 }
+
+//$debug .= ':';
+
+if(($directive && $anchor) || (!is_nan($page) && $page != null )){
+
+  if($directive == "works")    $query = 'select title, (select src from images where id = s.image_id)         as image_path from works   s where alias = :alias';
+  if($directive == "clients")  $query = 'select title, (select src from images where id = s.thumbnail_baw_id) as image_path from clients s where alias = :alias';
+  if($directive == "category") $query = 'select title from categories s where alias = :alias';
+  if($page != null && !is_nan($page)) $query = 'select title from pages s where alias = :alias';
+
+	$q = $dbh->prepare($query);
+	$q->execute(array(":alias"=>$anchor));
+	$r = $q->fetch(PDO::FETCH_ASSOC);
+
+  //$desc = $directive . " :: " .  $anchor . " :: " . $page . " :: " . $_SERVER["REQUEST_URI"] . " :: " . implode("",explode('"',json_encode($pageAliases))) . "|DebugStart|" . $debug;
+
+	$title = $r["title"] . " | Fresh Ideas";
+
+	(is_nan($page) || $page == null) && $directive != "category" && ($image = "http://www.fresh-ideas.eu/".$r["image_path"]);
+
+}
+
+if($directive && !$anchor) $title = "Clients | Fresh Ideas";
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta content='width=device-width, initial-scale=0.5, maximum-scale=2.5, user-scalable=1' name='viewport' />
-<title>Fresh Ideas</title>
+<title><?=$title?></title>
 <meta name="title" content="Fresh Ideas">
 <meta name="description" content="<?=$desc?>">
 <meta name="keywords" content="fresh ideas, patras">
@@ -51,8 +103,6 @@ if($_GET['w']){
 <meta property="og:type" content="website">
 <meta property="og:locale" content="el_GR">
 <meta property="og:description" content="<?=$desc?>">
-<link href="styles.css" rel="stylesheet" type="text/css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <?php
 
 
@@ -103,17 +153,31 @@ $clients = $q->fetchall(PDO::FETCH_ASSOC);
 ?>
 <script>
 
-var menuData = <?=json_encode($menuData)?>;
-var settings = <?=json_encode($settings)?>;
-var workCategories = <?=json_encode($workCategories)?>;
-var worksData = <?=json_encode($worksData)?>;
-var images = <?=json_encode($images)?>;
-var pages = <?=json_encode($pages)?>;
-var clients = <?=json_encode($clients)?>;
-window._prefix = '<?=$prefix?>';
+  var siteData = {
+    menu: <?=json_encode($menuData)?>,
+    settings: <?=json_encode($settings)?>,
+    categories: <?=json_encode($workCategories)?>,
+    works: <?=json_encode($worksData)?>,
+    images: <?=json_encode($images)?>,
+    pages: <?=json_encode($pages)?>,
+    clients: <?=json_encode($clients)?>
+  }
+
+  var ROOT = '<?=$ROOT?>';
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60261391-1', 'auto');
+  ga('send', 'pageview');
+
 </script>
-<script src="jsbinder.php"></script>
-<link rel="shortcut icon" href="images/favicon.ico">
+<link href="<?=$ROOT?>styles.css" rel="stylesheet" type="text/css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="<?=$ROOT?>jsbinder.php"></script>
+<link rel="shortcut icon" href="<?=$ROOT?>images/favicon.ico">
 </head>
 <body>
 
@@ -128,15 +192,7 @@ window._prefix = '<?=$prefix?>';
     <div class="copyright-date">&copy;<?=date('Y')?> fresh-ideas</div>
 </div>
 <div class="side-bg"></div>
-<div class="preloader">
-	<img scr="images/social.png" />
-	<img scr="images/arrow_left_normal.png" />
-	<img scr="images/arrow_left_hover.png" />
-	<img scr="images/arrow_right_normal.png" />
-	<img scr="images/arrow_right_hover.png" />
-	<img scr="images/button_contact_active.png" />
-</div>
-<img src="images/back_to_top.png" class="top-scroller ani05" />
+<img src="<?=$ROOT?>images/back_to_top.png" class="top-scroller ani05" />
 
 <script>
 var isiPad = navigator.userAgent.match(/iPad/i) != null;
@@ -145,7 +201,7 @@ try{ navData = JSON.parse(navData); }catch(x){ navData = []; }
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
  $('body').prepend('<style>.right-arrow { right: -7px !important; position: absolute !important; }.left-arrow { left: -7px !important; position: absolute !important; }</style>');
 }
-init();
+  var Site = new OnePage(window);
 </script>
 </body>
 </html>
