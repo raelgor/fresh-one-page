@@ -90,7 +90,11 @@ OnePage.prototype.initialize = function(window){
 
   // Cancel scroll animation if scroll caused by user
   // NOTE: Will most likely not work with touch. Must add touch event.
-  $(window).on("mousewheel",function(){$('html,body').stop()})
+  $(window).on("mousewheel",function(){$('html,body').stop()});
+
+  $(window).click(function(){ var shareMenus = $('.share-menu');
+  	OnePage.setElementScale(shareMenus,0);
+  	setTimeout(function(){ shareMenus.remove(); },500); });
 
 }
 
@@ -152,7 +156,7 @@ OnePage.prototype.getShareHTML = function(work){
 		     URL + '" target="_blank"></a>' +
 		     '<a href="http://www.pinterest.com/pin/create/bookmarklet/?url=' +
 		     URL + '&description=Fresh Ideas Project&image_url=' +
-		     'http://fresh-ideas.eu' + ROOT + src +
+		     'http://fresh-ideas.eu/' + src +
 		     '" target="_blank"></a>' +
 		     '<a href="https://plus.google.com/share?url=' + URL +
 		     '&hl=en-US" target="_blank"></a>' +
@@ -176,9 +180,11 @@ OnePage.prototype.shareMouseOver = function(work,coords){
 	  .append('<div class="share-menu ani05">'+shareHTML+'</div>')
 	  .find('.share-menu:last-of-type')
 	  .css({top:coords.top,left:coords.left})
-	  .find('a')
 	  .bind("mouseout click",function(e){
-	if($(e.toElement).is('.share-menu a') && e.type != "click") return;
+
+	if($(e.relatedTarget)
+	    .is('.share-menu a,:has(.share-menu),.share-menu')
+	    && e.type != "click") return;
 
 	var shareMenus = $('.share-menu');
 	OnePage.setElementScale(shareMenus,0);
