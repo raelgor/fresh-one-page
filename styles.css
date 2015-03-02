@@ -471,6 +471,9 @@ div.social .like, div.social .share {
 	margin: 0 1%;
 	cursor: pointer;
 }
+*::selection {
+background: rgba(255, 232, 0, 0.33) !important;
+}
 div.social .share {
 	background-image: url(images/share_work.png);
 }
