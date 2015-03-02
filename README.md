@@ -5,16 +5,18 @@ A lite One-Page site template.
 * ~~Fix stateful navigation~~
 * ~~SEF URLs~~
 * Image Viewer
-* Associate with Facebook Page
+* ~~Associate with Facebook Page~~
 * Assiciate with Google+ Page
-* Create Google+ Page
+* ~~Create Google+ Page~~
 * Image dimention spaceholding
 * ~~Fix meta data for share links~~
 * Merge and minify CSS and JS
 * ~~Add caching headers and gzip~~
-* Analytics
+* ~~Analytics~~
 * ~~The **"null"** bug~~
 * 404 Page
 * White Space on Mobile devices
 * Broken titles on thumbnails
-* Support page submenus
+* ~~Support page submenus~~
+* Support old links
+* Contact form: check for empty fields
