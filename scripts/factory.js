@@ -136,10 +136,10 @@ OnePage.prototype.setPage = function(alias){
 
       var errorDiv = $('.error-div');
 
-			$('[name="name"]').val() &&
-			$('[name="email"]').val() &&
-			$('textarea').val() ?
-			errorDiv.html(settings.ContactFailureMessage) :
+			!$('[name="name"]').val() ||
+			!$('[name="email"]').val() ||
+			!$('textarea').val() ?
+			errorDiv.html(siteData.settings.ContactFailureMessage) :
 			$.post(
 		    '/cms/api.php',{
   				action:'email',
@@ -216,7 +216,7 @@ OnePage.prototype.setWork = function(alias){
 	$('.work-page-holder img').load(function(){
 	      $(this).animate({opacity:1},200,'swing'); OnePage.fixSides(); });
 
-	$('.share').bind("mouseover click",function(){
+	$('.share').bind("mouseover",function(){
 
 					var shareMenu = $('.share-menu');
 
@@ -232,11 +232,11 @@ OnePage.prototype.setWork = function(alias){
 					$('body').append('<div class="share-menu ani05">'+shareHTML+'</div>')
 					         .find('.share-menu:last-of-type')
 					         .css({top:coords.top,left:coords.left})
-					         .find('a')
-					         .bind("mouseout click",function(e){
+					         .bind("mouseout",function(e){
 
-					            if($(e.toElement).is('.share-menu a') &&
-					               e.type != "click") return;
+					            if($(e.relatedTarget)
+                  	    .is('.share-menu a,:has(.share-menu),.share-menu')
+                  	    && e.type != "click") return;
 
 					            var shareMenu = $('.share-menu');
 				            	OnePage.setElementScale(shareMenu,0);
@@ -287,14 +287,14 @@ OnePage.prototype.setCarousel = function(ids,workAlias){
         index    = ids.indexOf(id),
         arrow    = $(this),
         di       = 30,
-        time     = 300,
+        time     = 500,
         d        = arrow.is('.right-arrow') ? '-' : '',
         r        = arrow.is('.right-arrow') ? ''  : '-';
 
     arrow.is('.right-arrow') && ++index > ( ids.length - 1 ) && ( index = 0 );
     arrow.is('.left-arrow')  && --index < 0     && ( index = ids.length - 1 );
 
-    $('body,html').animate({scrollTop:'0'},800,'swing');
+    $('body,html').animate({scrollTop:'0'},500,'swing');
     $('.work-page-holder')
         .animate({left:d+di+'px',opacity:0},time,'swing',function(){
 
