@@ -12,6 +12,9 @@ OnePage.prototype.setPopstateHandler = function(){
     // Get state
     OnePage.getState(event.state);
 
+    // Set carousel
+    OnePage.carousel = event.state.worksCarousel;
+
   }
 
 }
@@ -44,10 +47,6 @@ OnePage.prototype.getState = function(stateObject){
     stateObject.type == 2 && this.setCategory(stateObject.alias);
     stateObject.type == 5 && this.setWork(stateObject.alias);
 
-    // Works carousel should start with instructed content or default to
-    // the work's category.
-    stateObject.type == 5 && this.setCarousel(stateObject.worksCarousel);
-
     // Show clients
     stateObject.type == 3 && this.listClients();
 
@@ -64,6 +63,7 @@ OnePage.prototype.getState = function(stateObject){
 // Register a new state
 OnePage.prototype.setState = function(stateObject){
 
+  this.carousel = stateObject.worksCarousel;
   window.history.pushState(stateObject,stateObject.title,ROOT+stateObject.url);
 
 }

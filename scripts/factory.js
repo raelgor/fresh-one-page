@@ -168,11 +168,153 @@ OnePage.prototype.setPage = function(alias){
 
 }
 
-OnePage.prototype.setWork = function(){
+OnePage.prototype.setWork = function(alias){
+
+  var OnePage = this;
+
+  // Brain fart
+  this.setCarousel(this.carousel,alias);
+
+  try{
+		var work = siteData.works.filter(function(w){ return w.alias == alias })[0];
+	} catch(x){
+		throw 'Display 404 page.';
+	}
+
+	$('.work-page-holder').remove();
+	$('.indexContent').append('<div class="work-page-holder" data-id="' +
+	                          work.id+'">' + work.html +
+	                          '<div class="social"><a class="like" data-id="' +
+	                          work.id + '"></a><a class="share" data-id="' +
+	                          work.id + '"></a></div></div>');
+
+	$('.like').mouseover(function(){
+
+		if($(this).hasClass('liked')) return;
+		var coords = $(this).offset();
+		$('body').append('<div class="hover-thumbs">Like</div>')
+		         .find('.hover-thumbs')
+		         .css({top:coords.top+10,left:coords.left});
+
+	}).mouseout(function(){ $('.hover-thumbs').remove(); }).click(function(){
+
+		$(this).addClass('liked');
+		$('.hover-thumbs').remove();
+		$.post('/cms/api.php',{
+			action_like_works:1,
+			wid:$(this).attr('data-id')
+		});
+
+	});
+
+	$('.work-page-holder img').load(function(){
+	      $(this).animate({opacity:1},200,'swing'); OnePage.fixSides(); });
+
+	$('.share').bind("mouseover click",function(){
+
+					var shareMenu = $('.share-menu');
+
+					// Will not spawn one if another is already closing
+					if(shareMenu.length) return;
+
+					OnePage.setElementScale(shareMenu,0);
+					setTimeout(function(){ shareMenu.remove(); },500);
+
+					var shareHTML = OnePage.getShareHTML(work);
+					var coords = $(this).offset();
+
+					$('body').append('<div class="share-menu ani05">'+shareHTML+'</div>')
+					         .find('.share-menu:last-of-type')
+					         .css({top:coords.top,left:coords.left})
+					         .find('a')
+					         .bind("mouseout click",function(e){
+
+					            if($(e.toElement).is('.share-menu a') &&
+					               e.type != "click") return;
+
+					            var shareMenu = $('.share-menu');
+				            	OnePage.setElementScale(shareMenu,0);
+				            	setTimeout(function(){ shareMenu.remove(); },500);
+
+					         });
+
+					setTimeout(function(){
+					  OnePage.setElementScale('.share-menu:last-of-type',1); },100);
+
+					$('.share-menu:last-of-type').css({
+						margin: '-100px -60px'
+					});
+
+	});
 
 }
 
-OnePage.prototype.setCarousel = function(){
+OnePage.prototype.setCarousel = function(ids,workAlias){
+
+  var OnePage = this,
+      work = siteData.works.filter(function(w){
+              return w.alias == workAlias; })[0],
+      index,next,prev;
+
+  // Always
+  $('.indexContent').html('');
+
+  if(!ids) ids = siteData.categories
+                         .filter(function(c){ return c.alias == "all"; })[0]
+                         .works;
+
+  index = ids.indexOf(work.id);
+
+  next = index + 1 == ids.length ? 0              : index + 1;
+  prev = index - 1 < 0           ? ids.length - 1 : index - 1;
+
+  function getWorkHtml(id){
+    return siteData.works.filter(function(w){ return w.id == id; })[0].html;
+  }
+
+  prevCacher = $( getWorkHtml( ids[prev] ) );
+  nextCacher = $( getWorkHtml( ids[next] ) );
+
+  ids.length > 1 && this.spawnArrows(function(e){
+
+    var id       = $('.work-page-holder').attr('data-id'),
+        index    = ids.indexOf(id),
+        arrow    = $(this),
+        di       = 30,
+        time     = 300,
+        d        = arrow.is('.right-arrow') ? '-' : '',
+        r        = arrow.is('.right-arrow') ? ''  : '-';
+
+    arrow.is('.right-arrow') && ++index > ( ids.length - 1 ) && ( index = 0 );
+    arrow.is('.left-arrow')  && --index < 0     && ( index = ids.length - 1 );
+
+    $('body,html').animate({scrollTop:'0'},800,'swing');
+    $('.work-page-holder')
+        .animate({left:d+di+'px',opacity:0},time,'swing',function(){
+
+            var work = siteData.works.filter(function(w){
+              return w.id == ids[index]; })[0];
+
+            OnePage.setWork(work.alias);
+            stateObject = {
+              menuState: {
+                menu:    $('.menu-item:has(.selected)').attr('data-id'),
+                submenu: $('.menu-sub.selected').attr('data-id')
+              },
+              alias: work.alias,
+              title: work.title,
+              url:   'works/' + work.alias,
+              type:  5
+            }
+
+            OnePage.setState(stateObject);
+
+            $('.work-page-holder')
+                .css({left:r+di+'px',opacity:0})
+                .delay(10)
+                .animate({left:'0px',opacity:1},time,'swing'); });
+
+  });
 
 }
 
@@ -243,10 +385,16 @@ OnePage.prototype.setCategory = function(alias){
 
 		    $('.indexContent').animate({opacity:0},200,'swing',function(){
 
+          var carousel = [];
+          $('[data-id].work').each(function(i,e){
+              carousel.push( $(e).attr('data-id') ); });
+
           OnePage.setState({
             url: 'works/' + work.alias,
             title: work.title,
-            type: 5
+            type: 5,
+            alias: work.alias,
+            worksCarousel: carousel
           });
 
           OnePage.getStateFromUrl();
@@ -292,7 +440,11 @@ OnePage.prototype.listClients = function(){
 			    OnePage.setState({
 			      type: 4,
 			      url: 'clients/' + c.alias,
-			      alias: c.alias
+			      alias: c.alias,
+			      menuState: {
+			        menu: siteData.menu.filter(function(m){
+			         return m.type == 3; })[0].id
+			      }
 			    });
 
 			    OnePage.getStateFromUrl();
@@ -397,10 +549,16 @@ OnePage.prototype.showClient = function(alias){
 
 		    $('.indexContent').animate({opacity:0},200,'swing',function(){
 
+          var carousel = [];
+          $('[data-id].work').each(function(i,e){
+              carousel.push( $(e).attr('data-id') ); });
+
           OnePage.setState({
             url: 'works/' + work.alias,
             title: work.title,
-            type: 5
+            type: 5,
+            worksCarousel: carousel,
+            alias: work.alias
           });
 
           OnePage.getStateFromUrl();
@@ -418,5 +576,14 @@ OnePage.prototype.showClient = function(alias){
 
 	$('.work-page-holder img').load(function(){
 	  $(this).animate({opacity:1},200,'swing'); OnePage.fixSides(); });
+
+}
+
+OnePage.prototype.spawnArrows = function(clickCallback){
+
+  $('.indexContent')
+        .append('<div class="right-arrow"></div><div class="left-arrow"></div>')
+        .find('.left-arrow,.right-arrow')
+        .click(clickCallback);
 
 }
