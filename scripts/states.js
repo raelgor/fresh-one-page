@@ -134,8 +134,11 @@ OnePage.prototype.getStateFromUrl = function(initial){
   if(type == 0){
     var mID = siteData.menu.filter(function(m){ return m.type == 0; })[0].id;
     stateObject.menuState = {
-      menu: mID
+      menu:    siteData.settings.DefaultMenu,
+      submenu: siteData.settings.DefaultSubMenu
     }
+    stateObject.type  = 2;
+    stateObject.alias = 'all';
   }
 
   stateObject.title = title;
