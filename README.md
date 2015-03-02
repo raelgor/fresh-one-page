@@ -18,3 +18,4 @@ A lite One-Page site template.
 * White Space on Mobile devices
 * Broken titles on thumbnails
 * ~~Support page submenus~~
+* Support old links
