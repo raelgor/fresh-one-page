@@ -498,7 +498,8 @@ OnePage.prototype.appendWork = function(workID){
 
 		if($(e.target).is(':not(.like,.share)')){
 
-	    $('.indexContent').animate({opacity:0},200,'swing',function(){
+      $('body,html').animate({scrollTop:0},200);
+	    $('.indexContent').animate({opacity:0},300,'swing',function(){
 
         var carousel = [];
         $('[data-id].work').each(function(i,e){
