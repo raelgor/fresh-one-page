@@ -86,11 +86,19 @@ OnePage.prototype.initialize = function(window){
       e.keyCode == 37 && $('.left-arrow') .click();
     }
 
+    e.keyCode == 27 && killImageViewer();
+
   });
 
   // Cancel scroll animation if scroll caused by user
   // NOTE: Will most likely not work with touch. Must add touch event.
   $(window).on("mousewheel",function(){$('html,body').stop()});
+
+  function killImageViewer(){
+    $('.blurry').removeClass('blurry') &&
+    $('.image-viewer').css({opacity:0,pointerEvents:'none'}) &&
+    setTimeout(function(){ $('.image-viewer').remove(); },700);
+  }
 
   // Global click handler
   $(window).click(function(e){
@@ -109,9 +117,7 @@ OnePage.prototype.initialize = function(window){
     !target.hasClass('.image-viewer') &&
     !target.parents('.image-viewer').length &&
     $('.image-viewer:not(.unborn)').length &&
-    $('.blurry').removeClass('blurry') &&
-    $('.image-viewer').css({opacity:0,pointerEvents:'none'}) &&
-    setTimeout(function(){ $('.image-viewer').remove(); },700);
+    killImageViewer();
 
   });
 
