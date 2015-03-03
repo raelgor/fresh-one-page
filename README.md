@@ -4,7 +4,7 @@ A lite One-Page site template.
 **TODO**
 * ~~Fix stateful navigation~~
 * ~~SEF URLs~~
-* Image Viewer
+* ~~Image Viewer~~
 * ~~Associate with Facebook Page~~
 * Associate with Google+ Page
 * ~~Create Google+ Page~~
@@ -24,3 +24,4 @@ A lite One-Page site template.
 * Share menu on Firefox bug
 * ~~Swipe navigation for works~~
 * CMS display image file size
+* The "double click" bug
