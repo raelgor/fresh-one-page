@@ -110,6 +110,11 @@ OnePage.prototype.getStateFromUrl = function(initial){
     }
   }
   if(type == 3) title = 'Clients';
+  if(type == 5){
+    var work = siteData.works.filter(searchByAlias)[0];
+    title = work.title;
+    stateObject.alias = work.alias;
+  }
   if(type == 4){
     var client = siteData.clients.filter(searchByAlias)[0];
     title = client.title;

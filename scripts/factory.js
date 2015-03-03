@@ -321,6 +321,8 @@ OnePage.prototype.setCarousel = function(ids,workAlias){
             OnePage.setState(stateObject);
             OnePage.setWork(work.alias);
 
+            document.title = stateObject.title + ' | Fresh Ideas';
+
             $('.work-page-holder')
                 .css({left:r+di+'px',opacity:0})
                 .delay(10)
