@@ -339,92 +339,7 @@ OnePage.prototype.setCategory = function(alias){
 	var holder = $('.indexContent').html('<div class="work-holder"></div>')
 	                               .find('.work-holder');
 
-	category.works.forEach(function(wid){
-
-		var work = siteData.works.filter(function(w){
-		    return w.id == wid })[0];
-
-		var category_title = '';
-		var src = 'http://fresh-ideas.eu/';
-
-		siteData.categories.forEach(function(cw){
-			if(["Archive","All"].indexOf(cw.title) != -1) return;
-			cw.works.indexOf(work.id) != -1 && (category_title = cw.title);	});
-
-		try{
-		  src += siteData
-		          .images
-		          .filter(function(i){ return i.id == work.image_id })[0].src
-		}catch(x){}
-
-		var element = $('<div>');
-
-		element.attr('data-id',work.id)
-		       .addClass('work')
-		       .html('<div class="mainImage"></div><div class="shadow"></div>')
-		       .find('.mainImage')
-				   .html(
-					    '<div class="infobar ani02"><a class="share"></a>' +
-					    '<a class="like"></a>' + work.title + '<span>' +
-					    category_title + '</span></div>' +
-					    '<img class="ani02" src="' + src +
-					    '" style="width:100%; height:100%;" />')
-				   .find('img')
-				   .load(function(){
-				     $(this).parents('.work').animate({opacity:'1'},250,'swing'); });
-
-	  element.find('.like')
-	         .mouseover(function(){
-					    if($(this).hasClass('liked')) return;
-					    var coords = $(this).offset();
-					    $('body').append('<div class="hover-thumbs">Like</div>')
-					         .find('.hover-thumbs')
-					         .css({top:coords.top,left:coords.left});})
-		       .mouseout(function(){ $('.hover-thumbs').remove(); })
-		       .click(function(){
-					    $(this).addClass('liked');
-					    $('.hover-thumbs').remove();
-					    $.post('http://www.fresh-ideas.eu/cms/api.php',{
-						    action_like_works:1,
-						    wid:$(this).parents('.work').attr('data-id')});	});
-
-	  element.find('.share').mouseover(function(){
-	    OnePage.shareMouseOver(work,$(this).offset()); });
-
-		element.click(function(e){
-
-			if($(e.target).is(':not(.like,.share)')){
-
-		    $('.indexContent').animate({opacity:0},200,'swing',function(){
-
-          var carousel = [];
-          $('[data-id].work').each(function(i,e){
-              carousel.push( $(e).attr('data-id') ); });
-
-          OnePage.setState({
-            url: 'works/' + work.alias,
-            title: work.title,
-            type: 5,
-            alias: work.alias,
-            worksCarousel: carousel,
-            menuState: {
-              menu:    $('.menu-item:has(.selected)').attr('data-id'),
-              submenu: $('.menu-sub.selected').attr('data-id')
-            }
-          });
-
-          OnePage.getStateFromUrl();
-
-				});
-
-			}
-
-		});
-
-		holder.append(element);
-		element.css({height: element.width()*(336/441) + 'px'});
-
-	});
+	category.works.forEach(function(wid){ OnePage.appendWork(wid); });
 
 }
 
@@ -498,98 +413,12 @@ OnePage.prototype.showClient = function(alias){
 	$('.work-page-holder').remove();
 	$('.indexContent').html(
 	  '<div class="work-page-holder client" data-id="' + client.id + '">' +
-	  ( client.html || '' ) + '<div class="works-pool cl"></div></div>');
+	  ( client.html || '' ) + '<div class="work-holder cl"></div></div>');
 
 	siteData.works
 	        .filter(function(a){ return a.client_id == client.id  })
 	        .sort(function(a,b){ return b.index - a.index })
-	        .forEach(listWork);
-
-	function listWork(work){
-
-    function searchByID(c){
-        return c.works.indexOf(work.id) != -1 &&
-               ["All","Archive"].indexOf(c.title) == -1; }
-
-  	var category = siteData.categories.filter(searchByID)[0];
-    var images   = siteData.images;
-  	var holder   = $('.works-pool');
-		var src      = '/';
-
-  	if(!category) return;
-
-		try{
-		  src += images.filter(function(i){ return i.id == work.image_id })[0].src;
-		}catch(x){}
-
-		var element = $('<div>');
-		element
-		  .attr('data-id',work.id)
-		  .addClass('work')
-		  .html('<div class="mainImage"></div><div class="shadow"></div>')
-		  .find('.mainImage')
-			.html(
-				'<div class="infobar ani02"><a class="share"></a><a class="like"></a>' +
-				work.title + '<span>' + category.title + '</span></div>' +
-				'<img class="ani02" src="' + src +
-				'" style="width:100%; height:100%;" />')
-			.find('img')
-			.load(function(){
-			  $(this).parents('.work').animate({opacity:'1'},250,'swing'); });
-
-		element.find('.like').mouseover(function(){
-
-				if($(this).hasClass('liked')) return;
-				var coords = $(this).offset();
-				$('body')
-				  .append('<div class="hover-thumbs">Like</div>')
-				  .find('.hover-thumbs')
-				  .css({top:coords.top,left:coords.left});
-
-		}).mouseout(function(){ $('.hover-thumbs').remove(); }).click(function(){
-
-				$(this).addClass('liked');
-				$('.hover-thumbs').remove();
-				$.post('http://www.fresh-ideas.eu/cms/api.php',{
-					action_like_works:1,
-					wid:$(this).parents('.work').attr('data-id')
-				});
-
-	  });
-
-		element.find('.share').mouseover(function(){
-	    OnePage.shareMouseOver(work,$(this).offset()); });
-
-		element.click(function(e){
-
-		  if($(e.target).is(':not(.like,.share)')){
-
-		    $('.indexContent').animate({opacity:0},200,'swing',function(){
-
-          var carousel = [];
-          $('[data-id].work').each(function(i,e){
-              carousel.push( $(e).attr('data-id') ); });
-
-          OnePage.setState({
-            url: 'works/' + work.alias,
-            title: work.title,
-            type: 5,
-            worksCarousel: carousel,
-            alias: work.alias
-          });
-
-          OnePage.getStateFromUrl();
-
-				});
-
-			}
-
-		});
-
-		holder.append(element);
-		element.css({height: element.width()*(336/441) + 'px'});
-
-	}
+	        .forEach(function(work){ OnePage.appendWork(work.id); });
 
 	$('.work-page-holder img').load(function(){
 	  $(this).animate({opacity:1},200,'swing'); OnePage.fixSides(); });
@@ -602,5 +431,93 @@ OnePage.prototype.spawnArrows = function(clickCallback){
         .append('<div class="right-arrow"></div><div class="left-arrow"></div>')
         .find('.left-arrow,.right-arrow')
         .click(clickCallback);
+
+}
+
+OnePage.prototype.appendWork = function(workID){
+
+	var work = siteData.works.filter(function(w){
+	    return w.id == workID })[0],
+      category_title = '',
+	    src = 'http://fresh-ideas.eu/',
+	    holder = $('.work-holder'),
+	    OnePage = this;
+
+	siteData.categories.forEach(function(cw){
+		if(["Archive","All"].indexOf(cw.title) != -1) return;
+		cw.works.indexOf(work.id) != -1 && (category_title = cw.title);	});
+
+	try{
+	  src += siteData
+	          .images
+	          .filter(function(i){ return i.id == work.image_id })[0].src
+	}catch(x){}
+
+	var element = $('<div>');
+
+	element.attr('data-id',work.id)
+	       .addClass('work')
+	       .html('<div class="mainImage"></div><div class="shadow"></div>')
+	       .find('.mainImage')
+			   .html(
+				    '<div class="infobar ani02"><a class="share"></a>' +
+				    '<a class="like"></a>' + work.title + '<span>' +
+				    category_title + '</span></div>' +
+				    '<img class="ani02" src="' + src +
+				    '" style="width:100%; height:100%;" />')
+			   .find('img')
+			   .load(function(){
+			     $(this).parents('.work').animate({opacity:'1'},250,'swing'); });
+
+  element.find('.like')
+         .mouseover(function(){
+				    if($(this).hasClass('liked')) return;
+				    var coords = $(this).offset();
+				    $('body').append('<div class="hover-thumbs">Like</div>')
+				         .find('.hover-thumbs')
+				         .css({top:coords.top,left:coords.left});})
+	       .mouseout(function(){ $('.hover-thumbs').remove(); })
+	       .click(function(){
+				    $(this).addClass('liked');
+				    $('.hover-thumbs').remove();
+				    $.post('http://www.fresh-ideas.eu/cms/api.php',{
+					    action_like_works:1,
+					    wid:$(this).parents('.work').attr('data-id')});	});
+
+  element.find('.share').mouseover(function(){
+    OnePage.shareMouseOver(work,$(this).offset()); });
+
+	element.click(function(e){
+
+		if($(e.target).is(':not(.like,.share)')){
+
+	    $('.indexContent').animate({opacity:0},200,'swing',function(){
+
+        var carousel = [];
+        $('[data-id].work').each(function(i,e){
+            carousel.push( $(e).attr('data-id') ); });
+
+        OnePage.setState({
+          url: 'works/' + work.alias,
+          title: work.title,
+          type: 5,
+          alias: work.alias,
+          worksCarousel: carousel,
+          menuState: {
+            menu:    $('.menu-item:has(.selected)').attr('data-id'),
+            submenu: $('.menu-sub.selected').attr('data-id')
+          }
+        });
+
+        OnePage.getStateFromUrl();
+
+			});
+
+		}
+
+	});
+
+	holder.append(element);
+	element.css({height: element.width()*(336/441) + 'px'});
 
 }
