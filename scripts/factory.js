@@ -284,6 +284,8 @@ OnePage.prototype.setCarousel = function(ids,workAlias){
   prevCacher = $( getWorkHtml( ids[prev] ) );
   nextCacher = $( getWorkHtml( ids[next] ) );
 
+  this.carousel = ids;
+
   ids.length > 1 && this.spawnArrows(function(e){
 
     var id       = $('.work-page-holder').attr('data-id'),
@@ -304,7 +306,6 @@ OnePage.prototype.setCarousel = function(ids,workAlias){
             var work = siteData.works.filter(function(w){
               return w.id == ids[index]; })[0];
 
-            OnePage.setWork(work.alias);
             stateObject = {
               menuState: {
                 menu:    $('.menu-item:has(.selected)').attr('data-id'),
@@ -314,10 +315,11 @@ OnePage.prototype.setCarousel = function(ids,workAlias){
               title: work.title,
               url:   'works/' + work.alias,
               type:  5,
-              carousel: ids
+              worksCarousel: ids
             }
 
             OnePage.setState(stateObject);
+            OnePage.setWork(work.alias);
 
             $('.work-page-holder')
                 .css({left:r+di+'px',opacity:0})
