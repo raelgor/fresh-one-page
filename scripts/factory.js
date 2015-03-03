@@ -219,7 +219,7 @@ OnePage.prototype.setWork = function(alias){
 	$('.work-page-holder img').load(function(){
 	      $(this).animate({opacity:1},200,'swing'); OnePage.fixSides(); });
 
-	$('.share').bind("mouseover",function(){
+	$('.share').bind("mouseover click",function(){
 
 					var shareMenu = $('.share-menu');
 
@@ -489,8 +489,8 @@ OnePage.prototype.appendWork = function(workID){
 					    action_like_works:1,
 					    wid:$(this).parents('.work').attr('data-id')});	});
 
-  element.find('.share').mouseover(function(){
-    OnePage.shareMouseOver(work,$(this).offset()); });
+  element.find('.share').bind("mouseover click",function(){
+    OnePage.shareMouseOver(work,this); });
 
 	element.click(function(e){
 

@@ -103,10 +103,12 @@ OnePage.prototype.initialize = function(window){
   // Global click handler
   $(window).click(function(e){
 
-    var shareMenus = $('.share-menu');
+    if($(e.target).is(':not(.share)')){
+      var shareMenus = $('.share-menu');
 
-  	OnePage.setElementScale(shareMenus,0);
-  	setTimeout(function(){ shareMenus.remove(); },500);
+    	OnePage.setElementScale(shareMenus,0);
+    	setTimeout(function(){ shareMenus.remove(); },500);
+    }
 
     if( $(e.target).is('.work-page-holder img') ){
       setTimeout(function(){OnePage.startImageViewer.call(e.target);},50);
@@ -193,10 +195,15 @@ OnePage.prototype.getShareHTML = function(work){
 
 }
 
-OnePage.prototype.shareMouseOver = function(work,coords){
+OnePage.prototype.shareMouseOver = function(work,share){
 
   // Brain fart
-  var OnePage = window.OnePage.prototype;
+  var OnePage = window.OnePage.prototype,
+      coords  = {};
+
+  share = $(share).parents('.mainImage');
+  coords.left = share.offset().left + share.width() /2 - 153/2;
+  coords.top  = share.offset().top  + share.height()/2 - 100/2 + 20;
 
 	var shareMenus = $('.share-menu');
 	OnePage.setElementScale(shareMenus,0);
@@ -207,7 +214,7 @@ OnePage.prototype.shareMouseOver = function(work,coords){
 	$('body')
 	  .append('<div class="share-menu ani05">'+shareHTML+'</div>')
 	  .find('.share-menu:last-of-type')
-	  .css({top:coords.top,left:coords.left})
+	  .css({top:coords.top+'px',left:coords.left+'px'})
 	  .bind("mouseout click",function(e){
 
 	if($(e.relatedTarget)

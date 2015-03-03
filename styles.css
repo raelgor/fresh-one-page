@@ -52,10 +52,12 @@ span.fix_work_title {
     margin-top: 2px !important;
     font-size: 15px !important;
     height: 15px;
+    /*
     overflow: hidden;
     word-wrap: break-word;
     word-break: break-all;
-    padding-right: 10px;
+    */
+    padding-right: 62px;
 }
 
 span.fix_work_category {
@@ -538,7 +540,7 @@ div.social .share {
 	text-align: left;
 }
 .site-page article {
-	width: 30%;
+	width: 32%;
 	display: inline-block;
 	text-align: left;
 	font-size: 12px;
@@ -757,7 +759,7 @@ div.work-page-holder h4, .site-page h4, div.work-page-holder h4 {
 	-moz-transform: scale(0);
 	-o-transform: scale(0);
 	-ms-transform: scale(0);
-	margin: 30px -130px;
+	/*margin: 30px -130px;*/
 }
 .share-menu a {
 	float: left;
