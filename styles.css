@@ -48,6 +48,26 @@
 
 
 /*----------------*/
+.image-viewer {
+    position: fixed;
+    background: white;
+    box-shadow: 0 0 31px rgba(0, 0, 0, 0.15);
+    width: 0%;
+    height: 0%;
+    top: 50%;
+    left: 50%;
+    overflow:hidden;
+    z-index: 9999999;
+}
+
+.blurry {
+    -webkit-filter: blur(3px);
+    -moz-fitler: blur(3px);
+    -ms-filter: blur(3px);
+    -o-filter: blur();
+    filter: blur(3px);
+    pointer-events: none;
+}
 * {
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
 }

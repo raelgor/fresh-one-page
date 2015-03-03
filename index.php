@@ -191,8 +191,8 @@ $clients = $q->fetchall(PDO::FETCH_ASSOC);
 </head>
 <body>
 
-<div class="side-bg"></div>
-<div class="container">
+<div class="side-bg ani05"></div>
+<div class="container ani05">
 
 	<div class="head">
         <div class="nav-container"></div>
@@ -201,7 +201,7 @@ $clients = $q->fetchall(PDO::FETCH_ASSOC);
     <div class="indexContent"></div>
     <div class="copyright-date">&copy;<?=date('Y')?> fresh-ideas</div>
 </div>
-<div class="side-bg"></div>
+<div class="side-bg ani05"></div>
 <img src="<?=$ROOT?>images/back_to_top.png" class="top-scroller ani05" />
 
 <script>
