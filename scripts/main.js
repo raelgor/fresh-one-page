@@ -258,7 +258,7 @@ OnePage.prototype.startImageViewer = function(){
         imageRatio      = imageWidth / imageHeight,
         props           = {
             viewerMaxWidth  : 90,
-            viewerMaxHeight : 80,
+            viewerMaxHeight : 97,
             ratioHeight     : imageHeight / imageWidth,
             ratioWidth      : imageWidth / imageHeight,
             windowWidth     : window.innerWidth,
