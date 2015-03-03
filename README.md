@@ -25,3 +25,5 @@ A lite One-Page site template.
 * ~~Swipe navigation for works~~
 * CMS display image file size
 * The "double click" bug
+* Works tile shadow line
+* Global click to tap
