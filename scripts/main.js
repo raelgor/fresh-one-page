@@ -227,7 +227,7 @@ OnePage.prototype.onSwipe = function(element,direction,callback){
 
 OnePage.prototype.startImageViewer = function(){
 
-  if($('.image-viewer,.work-page-holder:animated').length) return;
+  if($('.image-viewer,.work-page-holder:animated,.work-page-holder.client').length) return;
 
   var viewer = $('<div>');
 

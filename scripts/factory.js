@@ -496,7 +496,7 @@ OnePage.prototype.showClient = function(alias){
 
 	$('.work-page-holder').remove();
 	$('.indexContent').html(
-	  '<div class="work-page-holder" data-id="' + client.id + '">' +
+	  '<div class="work-page-holder client" data-id="' + client.id + '">' +
 	  ( client.html || '' ) + '<div class="works-pool cl"></div></div>');
 
 	siteData.works
