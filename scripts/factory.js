@@ -313,7 +313,8 @@ OnePage.prototype.setCarousel = function(ids,workAlias){
               alias: work.alias,
               title: work.title,
               url:   'works/' + work.alias,
-              type:  5
+              type:  5,
+              carousel: ids
             }
 
             OnePage.setState(stateObject);
