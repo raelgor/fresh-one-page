@@ -369,17 +369,21 @@ OnePage.prototype.listClients = function(){
 			    'data-id': c.id})
 			  .click(function(){
 
-			    OnePage.setState({
-			      type: 4,
-			      url: 'clients/' + c.alias,
-			      alias: c.alias,
-			      menuState: {
-			        menu: siteData.menu.filter(function(m){
-			         return m.type == 3; })[0].id
-			      }
-			    });
 
-			    OnePage.getStateFromUrl();
+            $('body,html').animate({scrollTop:0},200);
+            $('.indexContent').animate({opacity:0},200,function(){
+    			    OnePage.setState({
+    			      type: 4,
+    			      url: 'clients/' + c.alias,
+    			      alias: c.alias,
+    			      menuState: {
+    			        menu: siteData.menu.filter(function(m){
+    			         return m.type == 3; })[0].id
+    			      }
+    			    });
+
+    			    OnePage.getStateFromUrl();
+            });
 
 			});
 
@@ -461,9 +465,10 @@ OnePage.prototype.appendWork = function(workID){
 	       .find('.mainImage')
 			   .html(
 				    '<div class="infobar ani02"><a class="share"></a>' +
-				    '<a class="like"></a>' + work.title + '<span>' +
-				    category_title + '</span></div>' +
-				    '<img class="ani02" src="' + src +
+				    '<a class="like"></a>' +
+				    '<span class="fix_work_title">' + work.title + '</span>' +
+				    '<span class="fix_work_category">' + category_title +
+				    '</span></div>' + '<img class="ani02" src="' + src +
 				    '" style="width:100%; height:100%;" />')
 			   .find('img')
 			   .load(function(){

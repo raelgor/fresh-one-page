@@ -121,6 +121,9 @@ OnePage.prototype.initialize = function(window){
 
   });
 
+  // Jesus
+  setInterval(function(){ OnePage.responsive() },1500);
+
 }
 
 OnePage.prototype.setElementScale = function(selector,scale){
