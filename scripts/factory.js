@@ -435,7 +435,8 @@ OnePage.prototype.listClients = function(){
   function showPage(){
 
     var clients = siteData.clients;
-		$('.indexContent').html('<h1>Clients</h1><div class="c-pool"></div>');
+		$('.indexContent').html('<h1 style="font-size: 60px;">Clients</h1>'+
+		                                            '<div class="c-pool"></div>');
 
 		clients.forEach(function(c){
 
