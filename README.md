@@ -27,3 +27,5 @@ A lite One-Page site template.
 * The "double click" bug
 * Works tile shadow line
 * Global click to tap
+* getState if back button should scroll to top
+* back button kills image viewer
