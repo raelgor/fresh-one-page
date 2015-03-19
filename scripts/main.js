@@ -286,7 +286,7 @@ OnePage.prototype.startImageViewer = function(){
     var current = $('.work-page-holder img[src="' +
                                 $('.image-viewer img').attr('src') + '"]'),
         next    = 0,
-        d       = this.className == 'viewer-arrow-right' ? 1 : -1,
+        d       = $(this).hasClass('viewer-arrow-right') ? 1 : -1,
         index   = 0;
 
     $('.work-page-holder img').each(function(i,e){
