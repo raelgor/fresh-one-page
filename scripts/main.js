@@ -67,7 +67,7 @@ OnePage.prototype.initialize = function(window){
   });
 
   // Bind top-scroller click event handler
-  $('.top-scroller').click(function(){
+  $('.top-scroller').bind("click touchend",function(){
 
     $('body,html').animate(
       {scrollTop:0+'px'},
@@ -140,12 +140,10 @@ OnePage.prototype.initialize = function(window){
 
     // Double click bug fix
     $(e.target).is('html') || $(e.target).parents('html').length &&
-    $('html').addClass('iron') &&
+    setTimeout(function(){ $('html').addClass('iron')},0) &&
     setTimeout(function(){ $('html').removeClass('iron'); },600);
 
-    e.preventDefault();
     e.stopPropagation();
-    return false;
 
   });
 
@@ -277,7 +275,7 @@ OnePage.prototype.startImageViewer = function(){
         .html('<div class="viewer-arrow-left  ani05"></div>' +
               '<div class="viewer-arrow-right ani05"></div>')
         .find('*')
-        .click(navigateImages);
+        .bind("click touchend",navigateImages);
 
   function navigateImages(){
 

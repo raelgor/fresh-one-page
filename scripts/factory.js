@@ -36,7 +36,7 @@ OnePage.prototype.menuFactory = function(){
 	});
 
 	// Handle clicks with navigation
-	$('.menu-item .title').click(function(e){
+	$('.menu-item .title').bind("click touchend",function(e){
 
 	  // Create state object
 	  var menu    = $(this).parents('.menu-item');
@@ -90,7 +90,7 @@ OnePage.prototype.menuFactory = function(){
 	});
 
   // Handle clicks of sub menus
-  $('.menu-item .menu-sub').click(function(){
+  $('.menu-item .menu-sub').bind("click touchend",function(){
 
     var category_id = $(this).attr('data-cat-id');
 		var category    = siteData.categories.filter(function(c){
@@ -132,7 +132,7 @@ OnePage.prototype.setPage = function(alias){
 		  $(this).animate({opacity:1},200,'swing'); OnePage.fixSides(); });
 
     // If contact page make the send button function
-		$('.send-button').click(function(){
+		$('.send-button').bind("click touchend",function(){
 
       var errorDiv = $('.error-div');
 
@@ -369,7 +369,7 @@ OnePage.prototype.listClients = function(){
 			  .attr({
 			    'src': 'http://www.fresh-ideas.eu/'+img,
 			    'data-id': c.id})
-			  .click(function(){
+			  .bind("click touchend",function(){
 
 
             $('body,html').animate({scrollTop:0},200);
@@ -436,7 +436,7 @@ OnePage.prototype.spawnArrows = function(clickCallback){
   $('.indexContent')
         .append('<div class="right-arrow"></div><div class="left-arrow"></div>')
         .find('.left-arrow,.right-arrow')
-        .click(clickCallback);
+        .bind("click touchend",clickCallback);
 
 }
 
@@ -494,7 +494,7 @@ OnePage.prototype.appendWork = function(workID){
   element.find('.share').bind("mouseover click",function(){
     OnePage.shareMouseOver(work,this); });
 
-	element.click(function(e){
+	element.bind("click touchend",function(e){
 
 		if($(e.target).is(':not(.like,.share)')){
 
