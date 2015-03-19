@@ -16,6 +16,13 @@ OnePage.prototype.setPopstateHandler = function(){
 
     })
 
+    $('.image-viewer').length &&
+    $('.blurry').removeClass('blurry') &&
+    $('.image-viewer').css({opacity:0,pointerEvents:'none'}) &&
+    setTimeout(function(){
+      $('.blurry').removeClass('blurry') &&
+      $('.image-viewer').remove(); },450);
+
     // Set carousel
     OnePage.carousel = event.state.worksCarousel;
 
