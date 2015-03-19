@@ -97,7 +97,9 @@ OnePage.prototype.initialize = function(window){
   function killImageViewer(){
     $('.blurry').removeClass('blurry') &&
     $('.image-viewer').css({opacity:0,pointerEvents:'none'}) &&
-    setTimeout(function(){ $('.image-viewer').remove(); },700);
+    setTimeout(function(){
+      $('.blurry').removeClass('blurry') &&
+      $('.image-viewer').remove(); },450);
   }
 
   // Global click handler
@@ -120,6 +122,11 @@ OnePage.prototype.initialize = function(window){
     !target.parents('.image-viewer').length &&
     $('.image-viewer:not(.unborn)').length &&
     killImageViewer();
+
+    // Double click bug fix
+    $(e.target).is('html') || $(e.target).parents('html').length &&
+    $('html').css('pointer-events','none') &&
+    setTimeout(function(){ $('html').css('pointer-events','all'); },600);
 
   });
 

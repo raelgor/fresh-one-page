@@ -9,11 +9,19 @@ OnePage.prototype.setPopstateHandler = function(){
     // Check if valid popstate
     if(!event.state) return console.log('Unmapped popstate event. Ignoring.');
 
-    // Get state
-    OnePage.getState(event.state);
+    $('.indexContent').animate({opacity:0},320,'swing',function(){
+
+      // Get state
+      OnePage.getState(event.state); console.log(event);
+
+    })
 
     // Set carousel
     OnePage.carousel = event.state.worksCarousel;
+
+    event.preventDefault();
+    event.stopPropagation();
+    return false;
 
   }
 
