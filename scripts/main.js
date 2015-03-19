@@ -81,7 +81,12 @@ OnePage.prototype.initialize = function(window){
   // Key bind shortcuts
   $(window).keydown(function(e){
 
-    if(!$(':focus').length){
+    if($('.image-viewer').length){
+      e.keyCode == 39 && $('.viewer-arrow-right').click();
+      e.keyCode == 37 && $('.viewer-arrow-left') .click();
+    }
+
+    if(!$(':focus').length && !$('.image-viewer').length){
       e.keyCode == 39 && $('.right-arrow').click();
       e.keyCode == 37 && $('.left-arrow') .click();
     }
@@ -130,15 +135,16 @@ OnePage.prototype.initialize = function(window){
     !target.hasClass('.image-viewer') &&
     !target.parents('.image-viewer').length &&
     $('.image-viewer:not(.unborn)').length &&
+    !$('html.iron').length &&
     killImageViewer();
 
     // Double click bug fix
     $(e.target).is('html') || $(e.target).parents('html').length &&
-    $('html').css('pointer-events','none') &&
-    setTimeout(function(){ $('html').css('pointer-events','all'); },600);
+    $('html').addClass('iron') &&
+    setTimeout(function(){ $('html').removeClass('iron'); },600);
 
     e.preventDefault();
-    e.stopPropagation(); console.log(e);
+    e.stopPropagation();
     return false;
 
   });
@@ -268,15 +274,36 @@ OnePage.prototype.startImageViewer = function(){
   var viewer = $('<div>');
 
   viewer.addClass('image-viewer ani05 unborn')
-        .html('<div class="viewer-arrow-left"></div>' +
-              '<div class="viewer-arrow-right"></div>')
+        .html('<div class="viewer-arrow-left  ani05"></div>' +
+              '<div class="viewer-arrow-right ani05"></div>')
         .find('*')
         .click(navigateImages);
 
   function navigateImages(){
 
+    // Exit if animating
+    if($('.image-viewer:animated, .image-viewer *:animated').length) return;
+
     // Find next one
-    console.log('navigate images called'+this.className);
+    var current = $('.work-page-holder img[src="' +
+                                $('.image-viewer img').attr('src') + '"]'),
+        next    = 0,
+        d       = this.className == 'viewer-arrow-right' ? 1 : -1,
+        index   = 0;
+
+    $('.work-page-holder img').each(function(i,e){
+
+      $(e).attr('src') == current.attr('src') &&
+      (next = $($('.work-page-holder img')[index+d]));
+
+      index++;
+
+    });
+
+    !next.length && d < 0 && (next = $('.work-page-holder img:last' ));
+    !next.length && d > 0 && (next = $('.work-page-holder img:first'));
+
+    spawnImage(next);
 
   }
 
@@ -359,7 +386,6 @@ OnePage.prototype.startImageViewer = function(){
     setTimeout(function(){ viewer.removeClass('unborn'); },500)
 
   }
-
 
   $('body').append(viewer);
 

@@ -22,6 +22,8 @@ OnePage.prototype.startPreloader = function(){
     'images/arrow_right_hover.png',
     'images/arrow_left_normal.png',
     'images/arrow_left_hover.png',
+    'images/a-right.png',
+    'images/a-left.png',
 
   ].forEach(function(asset){
 
