@@ -57,12 +57,18 @@ span.fix_work_title {
     word-wrap: break-word;
     word-break: break-all;
     */
+    white-space: nowrap;
     padding-right: 62px;
 }
 
 span.fix_work_category {
     margin-top: 9px !important;
     display: block;
+}
+
+/* Disable temporarily */
+.infobar .share, .infobar .like {
+  display: none !important;
 }
 
 /*----------------*/

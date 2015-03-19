@@ -102,8 +102,17 @@ OnePage.prototype.initialize = function(window){
       $('.image-viewer').remove(); },450);
   }
 
+  // Trace tap
+  $(window).bind("touchstart",function(){
+
+    window.tapTracker = new Date().getTime();
+
+  });
+
   // Global click handler
-  $(window).click(function(e){
+  $(window).bind("click touchend",function(e){
+
+    if(e.type == "touchend" && new Date().getTime() - tapTracker > 200) return;
 
     if($(e.target).is(':not(.share)')){
       var shareMenus = $('.share-menu');
@@ -127,6 +136,10 @@ OnePage.prototype.initialize = function(window){
     $(e.target).is('html') || $(e.target).parents('html').length &&
     $('html').css('pointer-events','none') &&
     setTimeout(function(){ $('html').css('pointer-events','all'); },600);
+
+    e.preventDefault();
+    e.stopPropagation(); console.log(e);
+    return false;
 
   });
 
