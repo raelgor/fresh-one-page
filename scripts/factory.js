@@ -369,8 +369,13 @@ OnePage.prototype.listClients = function(){
 			  .attr({
 			    'src': 'http://www.fresh-ideas.eu/'+img,
 			    'data-id': c.id})
-			  .bind("click touchend",function(){
+			  .bind("click touchend",function(e){
 
+            var isNotTouch = e.type == "touchend" && 
+            (new Date().getTime() - tapTracker > window.TOUCH_SENSITIVITY ||
+            (htmlPos != $('html').scrollTop() || bodyPos != $('body').scrollTop()));
+        
+            if(isNotTouch) return false;
 
             $('body,html').animate({scrollTop:0},200);
             $('.indexContent').animate({opacity:0},200,function(){
@@ -497,6 +502,12 @@ OnePage.prototype.appendWork = function(workID){
 	element.bind("click touchend",function(e){
 
 		if($(e.target).is(':not(.like,.share)')){
+		  
+      var isNotTouch = e.type == "touchend" && 
+      (new Date().getTime() - tapTracker > window.TOUCH_SENSITIVITY ||
+      (htmlPos != $('html').scrollTop() || bodyPos != $('body').scrollTop()));
+  
+      if(isNotTouch) return false;
 
       $('body,html').animate({scrollTop:0},200);
 	    $('.indexContent').animate({opacity:0},300,'swing',function(){

@@ -209,7 +209,8 @@ var isiPad = navigator.userAgent.match(/iPad/i) != null;
 var navData = '<?=json_encode($_GET)?>';
 try{ navData = JSON.parse(navData); }catch(x){ navData = []; }
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
- $('body').prepend('<style>.right-arrow { right: -7px !important; position: absolute !important; }.left-arrow { left: -7px !important; position: absolute !important; }</style>');
+  window.isPhone = true;
+ $('body').prepend('<style>.right-arrow { right: -7px !important; position: absolute !important; }.left-arrow { left: -7px !important; position: absolute !important; } .blurry { transition: none !important; -webkit-transition: none !important; opacity: .3; filter: none; -webkit-filter: none; -moz-filter: none; -ms-filter: none; -o-filter: none; }</style>');
 }
   var Site = new OnePage(window);
 </script>

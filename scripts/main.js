@@ -4,6 +4,8 @@
 ** License: MIT
 */
 
+window.TOUCH_SENSITIVITY = 250;
+
 function OnePage(window){
 
   this.window = window;
@@ -44,7 +46,7 @@ OnePage.prototype.initialize = function(window){
   // Create menu
   this.menuFactory();
 
-  // Get current state amd replace state object because we just came here
+  // Get current state and replace state object because we just came here
   this.getStateFromUrl(1);
 
   // Bind scroll event handler
@@ -111,13 +113,19 @@ OnePage.prototype.initialize = function(window){
   $(window).bind("touchstart",function(){
 
     window.tapTracker = new Date().getTime();
+    window.htmlPos = $('html').scrollTop();
+    window.bodyPos = $('body').scrollTop();
 
   });
 
   // Global click handler
   $(window).bind("click touchend",function(e){
 
-    if(e.type == "touchend" && new Date().getTime() - tapTracker > 200) return;
+    var isNotTouch = e.type == "touchend" && 
+    (new Date().getTime() - tapTracker > window.TOUCH_SENSITIVITY ||
+    (htmlPos != $('html').scrollTop() || bodyPos != $('body').scrollTop()));
+
+    if(isNotTouch) return false;
 
     if($(e.target).is(':not(.share)')){
       var shareMenus = $('.share-menu');
@@ -254,7 +262,10 @@ OnePage.prototype.shareMouseOver = function(work,share){
 }
 
 OnePage.prototype.onSwipe = function(element,direction,callback){
-
+  
+  // Temporarily retire swipes
+  return;
+  
   var swipe = new Hammer.Manager( $(element)[0] );
 
 	swipe.add(new Hammer
@@ -267,7 +278,7 @@ OnePage.prototype.onSwipe = function(element,direction,callback){
 
 OnePage.prototype.startImageViewer = function(){
 
-  if($('.image-viewer,.work-page-holder:animated,.work-page-holder.client').length) return;
+  if($('.image-viewer,.work-page-holder:animated,.work-page-holder.client').length || window.isPhone) return;
 
   var viewer = $('<div>');
 

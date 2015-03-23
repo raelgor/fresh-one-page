@@ -130,11 +130,15 @@ span.fix_work_category {
   -o-user-select: none;
 }
 
+html {
+  background: #333;
+}
+
 .blurry {
     -webkit-filter: blur(3px);
     -moz-fitler: blur(3px);
     -ms-filter: blur(3px);
-    -o-filter: blur();
+    -o-filter: blur(3px);
     filter: blur(3px);
     pointer-events: none;
 }
