@@ -283,8 +283,8 @@ OnePage.prototype.startImageViewer = function(){
   var viewer = $('<div>');
 
   viewer.addClass('image-viewer ani05 unborn')
-        .html('<div class="viewer-arrow-left  ani05"></div>' +
-              '<div class="viewer-arrow-right ani05"></div>')
+       // .html('<div class="viewer-arrow-left  ani05"></div>' +
+      //        '<div class="viewer-arrow-right ani05"></div>')
         .find('*')
         .bind("click touchend",navigateImages);
 
@@ -333,16 +333,17 @@ OnePage.prototype.startImageViewer = function(){
             viewerMaxHeight : 97,
             ratioHeight     : imageHeight / imageWidth,
             ratioWidth      : imageWidth / imageHeight,
-            windowWidth     : window.innerWidth,
+            // Jesus... The scrollbar was messing with the view's width...
+            windowWidth     : $('body').width(),
             windowHeight    : window.innerHeight
         },
         css             = {},
         newImgCss       = {},
         currentImage    = viewer.find('img'),
-        newImage        = image.clone(),
-        r               = 0
+        newImage        = image.clone().css('padding','0px'),
+        r               = 0;
 
-    function ratio(r){ return r ? imageRatio < 1 : imageRatio > 1 }
+    function ratio(r){ return r ? imageRatio < 1 : imageRatio > 1; }
 
     // Dimensions
     css[ratio()?'width':'height'] =
@@ -377,8 +378,8 @@ OnePage.prototype.startImageViewer = function(){
     currentImage.animate({opacity:0},500,'swing',
                           function(){ $(this).remove(); });
 
-    newImgCss[ratio()?'width':'height'] = '100%';
     newImgCss.opacity = 0;
+    newImgCss.height = newImgCss.width = '100%';
 
     newImage.css(newImgCss);
 
