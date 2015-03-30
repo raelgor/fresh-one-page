@@ -120,14 +120,14 @@ OnePage.prototype.initialize = function(window){
 
   // Global click handler
   $(window).bind("click touchend",function(e){
-
+    
     var isNotTouch = e.type == "touchend" && 
     (new Date().getTime() - tapTracker > window.TOUCH_SENSITIVITY ||
     (htmlPos != $('html').scrollTop() || bodyPos != $('body').scrollTop()));
-
+    
     if(isNotTouch) return false;
 
-    if($(e.target).is(':not(.share)')){
+    if($(e.target).is(':not(.share,.share-menu,.share-menu *)')){
       var shareMenus = $('.share-menu');
 
     	OnePage.setElementScale(shareMenus,0);
