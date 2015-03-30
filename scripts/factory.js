@@ -219,7 +219,7 @@ OnePage.prototype.setWork = function(alias){
 	$('.work-page-holder img').load(function(){
 	      $(this).animate({opacity:1},200,'swing'); OnePage.fixSides(); });
 
-	$('.share').bind("mouseover click",function(){
+	$('.share').bind("mouseover click touchend",function(e){
 
 					var shareMenu = $('.share-menu');
 
@@ -253,6 +253,9 @@ OnePage.prototype.setWork = function(alias){
 					$('.share-menu:last-of-type').css({
 						margin: '-100px -60px'
 					});
+					
+					// To not trigger click/touchend
+					return false;
 
 	});
 
