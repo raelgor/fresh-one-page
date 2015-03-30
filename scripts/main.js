@@ -126,6 +126,15 @@ OnePage.prototype.initialize = function(window){
     (htmlPos != $('html').scrollTop() || bodyPos != $('body').scrollTop()));
     
     if(isNotTouch) return false;
+    
+    // Share icons fix
+    if($(e.target).is('a[href]') && e.type == "touchend"){
+      
+      $(e.target).is('.share-menu a') ? window.open($(e.target).attr('href'))
+      : window.location.href = $(e.target).attr('href');
+      return false;
+      
+    }
 
     if($(e.target).is(':not(.share,.share-menu,.share-menu *)')){
       var shareMenus = $('.share-menu');
