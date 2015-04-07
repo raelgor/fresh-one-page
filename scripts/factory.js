@@ -15,10 +15,9 @@ OnePage.prototype.menuFactory = function(){
 		    'data-type': button.type
 		  });
 
-		button.isContactButton && $(element).addClass('contactButton');
+		if(button.isContactButton) $(element).addClass('contactButton');
 
-		button.submenu &&
-		button.submenu.forEach && button.submenu.forEach(function(subItem){
+    if(button.submenu && button.submenu.forEach) button.submenu.forEach(function(subItem){
 
 			var sub = document.createElement('div');
 			$(sub).html(subItem.title).addClass("menu-sub ani02").attr({
@@ -31,7 +30,7 @@ OnePage.prototype.menuFactory = function(){
 
 		});
 
-		$('.nav-container').append(element);
+		$('.nav-container .wrapper').append(element);
 
 	});
 
@@ -41,14 +40,14 @@ OnePage.prototype.menuFactory = function(){
 	  // Create state object
 	  var menu    = $(this).parents('.menu-item');
 		var menuID  = menu.attr('data-id');
-	  var mData   = siteData.menu.filter(function(m){ return m.id == menuID })[0];
+	  var mData   = siteData.menu.filter(function(m){ return m.id == menuID; })[0];
 	  var stateObject = {};
 
-	  mData.type == 3 && ( stateObject = {
+	  if(mData.type == 3) stateObject = {
 	    title: 'Clients',
 	    url:   'clients',
 	    type:  mData.type
-	  } );
+	  };
 
 	  if(mData.type == 1){
 	    var page = siteData.pages.filter(function(p){
@@ -58,12 +57,12 @@ OnePage.prototype.menuFactory = function(){
 	      url:   page.alias,
 	      type:  mData.type,
 	      alias: page.alias
-	    }
+	    };
 	  }
 
-    stateObject.menuState = { menu: mData.id }
-
-    if( mData.type == 0 ){
+    stateObject.menuState = { menu: mData.id };
+    
+    if( mData.type == "0" ){
 
       var category = siteData.categories.filter(function(c){
           return c.id == mData.submenu[0].category_id; })[0];
@@ -77,7 +76,7 @@ OnePage.prototype.menuFactory = function(){
   	      menu:     mData.id,
   	      submenu:  mData.submenu[0].id
   	    }
-  	  }
+  	  };
 
     }
 
@@ -104,7 +103,7 @@ OnePage.prototype.menuFactory = function(){
 	      menu:     $(this).parents('.menu-item').attr('data-id'),
 	      submenu:  $(this).attr('data-id')
 	    }
-	  }
+	  };
 
 	  // Set state
 	  OnePage.setState(stateObject);
@@ -115,7 +114,7 @@ OnePage.prototype.menuFactory = function(){
 	});
 
 
-}
+};
 
 OnePage.prototype.setPage = function(alias){
 
@@ -123,7 +122,7 @@ OnePage.prototype.setPage = function(alias){
 
   function showPage(){
 
-		var page = siteData.pages.filter(function(p){ return p.alias == alias })[0];
+		var page = siteData.pages.filter(function(p){ return p.alias == alias; })[0];
 
 		$('.indexContent').html('<div class="site-page">' + page.html + '</div>');
 
@@ -135,11 +134,14 @@ OnePage.prototype.setPage = function(alias){
 		$('.send-button').bind("click touchend",function(){
 
       var errorDiv = $('.error-div');
-
-			!$('[name="name"]').val() ||
-			!$('[name="email"]').val() ||
-			!$('textarea').val() ?
-			errorDiv.html(siteData.settings.ContactFailureMessage) :
+      
+      if(
+  			!$('[name="name"]').val() ||
+  			!$('[name="email"]').val() ||
+  			!$('textarea').val() 
+			)
+			errorDiv.html(siteData.settings.ContactFailureMessage);
+			else
 			$.post(
 		    '/cms/api.php',{
   				action:'email',
@@ -152,7 +154,7 @@ OnePage.prototype.setPage = function(alias){
 				        .css('color','green');
 
 				$('.yellow-input,.send-button').css({
-					'opacity':.3,
+					'opacity':0.3,
 					'pointer-events':'none'
 				});
 
@@ -163,23 +165,24 @@ OnePage.prototype.setPage = function(alias){
 		$('.indexContent').animate({opacity:1},200,'swing');
 
 		// Farting against the brain fart to push it back in
-		setTimeout(function(){ OnePage.responsive() },1000);
+		setTimeout(function(){ OnePage.responsive(); },1000);
 
   }
 
   $('.indexContent').animate({opacity:0},200,'swing',showPage);
 
-}
+};
 
 OnePage.prototype.setWork = function(alias){
 
-  var OnePage = this;
+  var OnePage = this,
+      work;
 
   // Brain fart
   this.setCarousel(this.carousel,alias);
 
   try{
-		var work = siteData.works.filter(function(w){ return w.alias == alias })[0];
+		work = siteData.works.filter(function(w){ return w.alias == alias; })[0];
 	} catch(x){
 		throw 'Display 404 page.';
 	}
@@ -259,7 +262,7 @@ OnePage.prototype.setWork = function(alias){
 
 	});
 
-}
+};
 
 OnePage.prototype.setCarousel = function(ids,workAlias){
 
@@ -289,7 +292,7 @@ OnePage.prototype.setCarousel = function(ids,workAlias){
 
   this.carousel = ids;
 
-  ids.length > 1 && this.spawnArrows(function(e){
+  if(ids.length > 1) this.spawnArrows(function(e){
 
     var id       = $('.work-page-holder').attr('data-id'),
         index    = ids.indexOf(id),
@@ -299,8 +302,8 @@ OnePage.prototype.setCarousel = function(ids,workAlias){
         d        = arrow.is('.right-arrow') ? '-' : '',
         r        = arrow.is('.right-arrow') ? ''  : '-';
 
-    arrow.is('.right-arrow') && ++index > ( ids.length - 1 ) && ( index = 0 );
-    arrow.is('.left-arrow')  && --index < 0     && ( index = ids.length - 1 );
+    if(arrow.is('.right-arrow') && ++index > ( ids.length - 1 ) ) index = 0;
+    if(arrow.is('.left-arrow')  && --index < 0 ) index = ids.length - 1;
 
     $('body,html').animate({scrollTop:'0'},500,'swing');
     $('.work-page-holder')
@@ -319,7 +322,7 @@ OnePage.prototype.setCarousel = function(ids,workAlias){
               url:   'works/' + work.alias,
               type:  5,
               worksCarousel: ids
-            }
+            };
 
             OnePage.setState(stateObject);
             OnePage.setWork(work.alias);
@@ -333,7 +336,7 @@ OnePage.prototype.setCarousel = function(ids,workAlias){
 
   });
 
-}
+};
 
 OnePage.prototype.setCategory = function(alias){
 
@@ -346,7 +349,7 @@ OnePage.prototype.setCategory = function(alias){
 
 	category.works.forEach(function(wid){ OnePage.appendWork(wid); });
 
-}
+};
 
 OnePage.prototype.listClients = function(){
 
@@ -366,19 +369,15 @@ OnePage.prototype.listClients = function(){
 			// Apparently a client with no thumbnail would make it crash
 			try{
 			  img = siteData.images.filter(function(r){
-			    return r.id == c.thumbnail_baw_id })[0].src } catch (x) {}
+			    return r.id == c.thumbnail_baw_id; })[0].src; } catch (x) {}
 
 			el.addClass('listed-client ani02 hidden')
 			  .attr({
 			    'src': 'http://www.fresh-ideas.eu/'+img,
 			    'data-id': c.id})
 			  .bind("click touchend",function(e){
-
-            var isNotTouch = e.type == "touchend" && 
-            (new Date().getTime() - tapTracker > window.TOUCH_SENSITIVITY ||
-            (htmlPos != $('html').scrollTop() || bodyPos != $('body').scrollTop()));
-        
-            if(isNotTouch) return false;
+            
+            if(OnePage.isNotTap(e)) return false;
 
             $('body,html').animate({scrollTop:0},200);
             $('.indexContent').animate({opacity:0},200,function(){
@@ -411,7 +410,7 @@ OnePage.prototype.listClients = function(){
 
   $('.indexContent').animate({opacity:0},200,'swing',showPage);
 
-}
+};
 
 OnePage.prototype.showClient = function(alias){
 
@@ -419,7 +418,7 @@ OnePage.prototype.showClient = function(alias){
 
   // Must add a 404 page at some point
   try{
-		client = siteData.clients.filter(function(c){ return c.alias == alias })[0];
+		client = siteData.clients.filter(function(c){ return c.alias == alias; })[0];
 	} catch(x){
 		throw 'Display 404 page.';
 	}
@@ -430,14 +429,14 @@ OnePage.prototype.showClient = function(alias){
 	  ( client.html || '' ) + '<div class="work-holder cl"></div></div>');
 
 	siteData.works
-	        .filter(function(a){ return a.client_id == client.id  })
-	        .sort(function(a,b){ return b.index - a.index })
+	        .filter(function(a){ return a.client_id == client.id;  })
+	        .sort(function(a,b){ return b.index - a.index; })
 	        .forEach(function(work){ OnePage.appendWork(work.id); });
 
 	$('.work-page-holder img').load(function(){
 	  $(this).animate({opacity:1},200,'swing'); OnePage.fixSides(); });
 
-}
+};
 
 OnePage.prototype.spawnArrows = function(clickCallback){
 
@@ -446,12 +445,12 @@ OnePage.prototype.spawnArrows = function(clickCallback){
         .find('.left-arrow,.right-arrow')
         .bind("click touchend",clickCallback);
 
-}
+};
 
 OnePage.prototype.appendWork = function(workID){
 
 	var work = siteData.works.filter(function(w){
-	    return w.id == workID })[0],
+	    return w.id == workID; })[0],
       category_title = '',
 	    src = 'http://fresh-ideas.eu/',
 	    holder = $('.work-holder'),
@@ -459,12 +458,12 @@ OnePage.prototype.appendWork = function(workID){
 
 	siteData.categories.forEach(function(cw){
 		if(["Archive","All"].indexOf(cw.title) != -1) return;
-		cw.works.indexOf(work.id) != -1 && (category_title = cw.title);	});
+		if(cw.works.indexOf(work.id) != -1) category_title = cw.title;	});
 
 	try{
 	  src += siteData
 	          .images
-	          .filter(function(i){ return i.id == work.image_id })[0].src
+	          .filter(function(i){ return i.id == work.image_id; })[0].src;
 	}catch(x){}
 
 	var element = $('<div>');
@@ -505,12 +504,8 @@ OnePage.prototype.appendWork = function(workID){
 	element.bind("click touchend",function(e){
 
 		if($(e.target).is(':not(.like,.share)')){
-		  
-      var isNotTouch = e.type == "touchend" && 
-      (new Date().getTime() - tapTracker > window.TOUCH_SENSITIVITY ||
-      (htmlPos != $('html').scrollTop() || bodyPos != $('body').scrollTop()));
-  
-      if(isNotTouch) return false;
+
+      if(OnePage.isNotTap(e)) return false;
 
       $('body,html').animate({scrollTop:0},200);
 	    $('.indexContent').animate({opacity:0},300,'swing',function(){
@@ -542,4 +537,4 @@ OnePage.prototype.appendWork = function(workID){
 	holder.append(element);
 	element.css({height: element.width()*(336/441) + 'px'});
 
-}
+};

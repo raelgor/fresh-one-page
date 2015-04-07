@@ -190,16 +190,16 @@ $clients = $q->fetchall(PDO::FETCH_ASSOC);
 <link rel="shortcut icon" href="<?=$ROOT?>images/favicon.ico">
 </head>
 <body>
-
 <div class="side-bg ani05"></div>
 <div class="container ani05">
 
 	<div class="head">
-        <div class="nav-container"></div>
+	    <div class="head-right-placeholder"></div>
     	<a class="logo" href="/"></a>
+      <div class="nav-container"><a class="wrapper"></a></div>
     </div>
     <div class="indexContent"></div>
-    <div class="copyright-date">&copy;<?=date('Y')?> fresh-ideas</div>
+    <div class="copyright-date"><span>&copy;<?=date('Y')?> fresh-ideas</span></div>
 </div>
 <div class="side-bg ani05"></div>
 <img src="<?=$ROOT?>images/back_to_top.png" class="top-scroller ani05" />

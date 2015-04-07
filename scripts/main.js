@@ -4,7 +4,8 @@
 ** License: MIT
 */
 
-window.TOUCH_SENSITIVITY = 250;
+window.TOUCH_SENSITIVITY = 250; // miliseconds
+window.DIST_TOLERANCE    = 4;   // pixels
 
 function OnePage(window){
 
@@ -28,14 +29,14 @@ OnePage.prototype.initialize = function(window){
 	document.onselectstart = function(e){
 	   if($(e.target).hasClass('head') || $(e.target).parents('.head').length)
 	    return false;
-	}
+	};
 
 	// Major brain fart
 	$('.container')
-	    .bind('DOMSubtreeModified',false,function(){ OnePage.responsive() });
+	    .bind('DOMSubtreeModified',false,function(){ OnePage.responsive(); });
 
 	// Disable selection everywhere, apparently
-  window.ondragstart = function(){ return false; }
+  window.ondragstart = function(){ return false; };
 
   // Start listening to popstate events
   this.setPopstateHandler();
@@ -84,54 +85,53 @@ OnePage.prototype.initialize = function(window){
   $(window).keydown(function(e){
 
     if($('.image-viewer').length){
-      e.keyCode == 39 && $('.viewer-arrow-right').click();
-      e.keyCode == 37 && $('.viewer-arrow-left') .click();
+      if(e.keyCode == 39) $('.viewer-arrow-right').click();
+      if(e.keyCode == 37) $('.viewer-arrow-left') .click();
     }
 
     if(!$(':focus').length && !$('.image-viewer').length){
-      e.keyCode == 39 && $('.right-arrow').click();
-      e.keyCode == 37 && $('.left-arrow') .click();
+      if(e.keyCode == 39) $('.right-arrow').click();
+      if(e.keyCode == 37) $('.left-arrow') .click();
     }
 
-    e.keyCode == 27 && killImageViewer();
+    if(e.keyCode == 27) killImageViewer();
 
   });
 
   // Cancel scroll animation if scroll caused by user
   // NOTE: Will most likely not work with touch. Must add touch event.
-  $(window).on("mousewheel",function(){$('html,body').stop()});
+  $(window).on("mousewheel",function(){$('html,body').stop();});
 
   function killImageViewer(){
-    $('.blurry').removeClass('blurry') &&
-    $('.image-viewer').css({opacity:0,pointerEvents:'none'}) &&
-    setTimeout(function(){
-      $('.blurry').removeClass('blurry') &&
-      $('.image-viewer').remove(); },450);
+    if($('.blurry').removeClass('blurry') &&
+       $('.image-viewer').css({opacity:0,pointerEvents:'none'})){ 
+         
+         setTimeout(function(){
+            if($('.blurry').removeClass('blurry')) $('.image-viewer').remove(); 
+            },450);
+            
+    }
   }
 
   // Trace tap
-  $(window).bind("touchstart",function(){
-
+  $(window).bind("touchstart",function(e){
+    
     window.tapTracker = new Date().getTime();
-    window.htmlPos = $('html').scrollTop();
-    window.bodyPos = $('body').scrollTop();
+    window.tX = e.originalEvent.touches[0].screenX;
+    window.tY = e.originalEvent.touches[0].screenY;
 
   });
-
-  // Global click handler
+  
+  // Global click handler 
   $(window).bind("click touchend",function(e){
     
-    var isNotTouch = e.type == "touchend" && 
-    (new Date().getTime() - tapTracker > window.TOUCH_SENSITIVITY ||
-    (htmlPos != $('html').scrollTop() || bodyPos != $('body').scrollTop()));
-    
-    if(isNotTouch) return false;
+    if(OnePage.isNotTap(e)) return false;
     
     // Share icons fix
     if($(e.target).is('a[href]') && e.type == "touchend"){
       
-      $(e.target).is('.share-menu a') ? window.open($(e.target).attr('href'))
-      : window.location.href = $(e.target).attr('href');
+      if($(e.target).is('.share-menu a')) window.open($(e.target).attr('href'));
+      else window.location.href = $(e.target).attr('href');
       return false;
       
     }
@@ -149,25 +149,28 @@ OnePage.prototype.initialize = function(window){
 
     var target = $(e.target);
 
-    !target.hasClass('.image-viewer') &&
-    !target.parents('.image-viewer').length &&
-    $('.image-viewer:not(.unborn)').length &&
-    !$('html.iron').length &&
+    if(
+      !target.hasClass('.image-viewer') &&
+      !target.parents('.image-viewer').length &&
+      $('.image-viewer:not(.unborn)').length &&
+      !$('html.iron').length
+    )
     killImageViewer();
 
     // Double click bug fix
-    $(e.target).is('html') || $(e.target).parents('html').length &&
-    setTimeout(function(){ $('html').addClass('iron')},0) &&
-    setTimeout(function(){ $('html').removeClass('iron'); },600);
+    if($(e.target).is('html') || $(e.target).parents('html').length){
+      setTimeout(function(){ $('html').addClass('iron'); },0);
+      setTimeout(function(){ $('html').removeClass('iron'); },600);
+    }
 
     e.stopPropagation();
 
   });
 
   // Jesus
-  setInterval(function(){ OnePage.responsive() },1500);
+  setInterval(function(){ OnePage.responsive(); },1500);
 
-}
+};
 
 OnePage.prototype.setElementScale = function(selector,scale){
   $(selector).css({
@@ -176,14 +179,14 @@ OnePage.prototype.setElementScale = function(selector,scale){
     '-o-transform':'scale(' + scale + ')',
     '-ms-transform':'scale(' + scale + ')'
   });
-}
+};
 
 OnePage.prototype.fixSides = function(){
 
   // Do this manually to increase compatibility
   $('.side-bg').css('height',$('.container').height() + 'px');
 
-}
+};
 
 // Glue CSS with JavaScript to increase compatibility. Must try a pure CSS
 // solution some time soon though because this is ugly.
@@ -193,17 +196,17 @@ OnePage.prototype.responsive = function(){
 	if( window.innerWidth <= 962 ){
 
 		$('.nav-container').css({
-			position: 'absolute',
-			margin: '154px 0 0 0',
-			left: ( $('.container').width()/2 - $('.nav-container').width()/2 ) + 'px'
+			//position: 'absolute',
+			//margin: '234px 0 0 0',
+			//left: ( $('.container').width()/2 - $('.nav-container').width()/2 ) + 'px'
 		});
 
 	} else {
 
 		$('.nav-container').css({
-			position: 'relative',
-			margin: '80px 10% 0 0',
-			left: '0px'
+			//position: 'relative',
+			//margin: '0 15% 0 10%',
+			//left: '0px'
 		});
 
 	}
@@ -211,7 +214,7 @@ OnePage.prototype.responsive = function(){
 	$('.work').css({height: $('.work').width()*(336/441) + 'px'});
 	this.fixSides();
 
-}
+};
 
 OnePage.prototype.getShareHTML = function(work){
 
@@ -234,7 +237,7 @@ OnePage.prototype.getShareHTML = function(work){
 		     '<a href="http://tumblr.com/share?s=&v=3&t=Fresh%20Ideas%20Project&u='+
 		     URL + '" target="_blank"></a>';
 
-}
+};
 
 OnePage.prototype.shareMouseOver = function(work,share){
 
@@ -266,24 +269,26 @@ OnePage.prototype.shareMouseOver = function(work,share){
 	OnePage.setElementScale(shareMenus,0);
 	setTimeout(function(){ shareMenus.remove(); },500); });
 	setTimeout(function(){
-	  OnePage.setElementScale('.share-menu:last-of-type',1)},100);
+	  OnePage.setElementScale('.share-menu:last-of-type',1);},100);
 
-}
+};
 
 OnePage.prototype.onSwipe = function(element,direction,callback){
   
   // Temporarily retire swipes
   return;
   
+  /*
   var swipe = new Hammer.Manager( $(element)[0] );
 
 	swipe.add(new Hammer
-	              .Swipe({velocity:.001,direction: Hammer.DIRECTION_HORIZONTAL}));
+	              .Swipe({velocity:0.001,direction: Hammer.DIRECTION_HORIZONTAL}));
 
 	swipe.on('swipe' + direction, function(e){
 	                    callback.call( $(element)[0] , e ); });
-
-}
+  */
+  
+};
 
 OnePage.prototype.startImageViewer = function(){
 
@@ -292,8 +297,8 @@ OnePage.prototype.startImageViewer = function(){
   var viewer = $('<div>');
 
   viewer.addClass('image-viewer ani05 unborn')
-       // .html('<div class="viewer-arrow-left  ani05"></div>' +
-      //        '<div class="viewer-arrow-right ani05"></div>')
+        .html('<div class="viewer-arrow-left  ani05"></div>' +
+              '<div class="viewer-arrow-right ani05"></div>') 
         .find('*')
         .bind("click touchend",navigateImages);
 
@@ -311,15 +316,15 @@ OnePage.prototype.startImageViewer = function(){
 
     $('.work-page-holder img').each(function(i,e){
 
-      $(e).attr('src') == current.attr('src') &&
-      (next = $($('.work-page-holder img')[index+d]));
+      if($(e).attr('src') == current.attr('src'))
+        (next = $($('.work-page-holder img')[index+d]));
 
       index++;
 
     });
 
-    !next.length && d < 0 && (next = $('.work-page-holder img:last' ));
-    !next.length && d > 0 && (next = $('.work-page-holder img:first'));
+    if(!next.length && d < 0) next = $('.work-page-holder img:last' );
+    if(!next.length && d > 0) next = $('.work-page-holder img:first');
 
     spawnImage(next);
 
@@ -397,12 +402,12 @@ OnePage.prototype.startImageViewer = function(){
       newImage.animate({opacity:1},500,'swing');
     },510);
 
-    !currentImage.length &&
-    viewer.css({opacity:0})
-          .delay(10)
-          .animate({opacity:1},500,'swing');
+    if(!currentImage.length)
+      viewer.css({opacity:0})
+            .delay(10)
+            .animate({opacity:1},500,'swing');
 
-    setTimeout(function(){ viewer.removeClass('unborn'); },500)
+    setTimeout(function(){ viewer.removeClass('unborn'); },500);
 
   }
 
@@ -411,4 +416,20 @@ OnePage.prototype.startImageViewer = function(){
   spawnImage($(this));
   $('body>*:not(.image-viewer)').addClass('blurry');
 
-}
+};
+
+// Determine if touch event was a tap that should equal a click
+OnePage.prototype.isNotTap = function(event){
+  
+  var screenX = event.originalEvent.changedTouches && event.originalEvent.changedTouches[0].screenX,
+      screenY = event.originalEvent.changedTouches && event.originalEvent.changedTouches[0].screenY;
+  
+  return event.type == "touchend" && 
+    (new Date().getTime() - tapTracker > window.TOUCH_SENSITIVITY ||
+    (
+      (Math.abs(tX - screenX) > window.DIST_TOLERANCE) || 
+      (Math.abs(tY - screenY) > window.DIST_TOLERANCE)
+    )
+    );
+    
+};
