@@ -22,9 +22,9 @@ $ROOT = $config["root"];
 
 $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
-$desc = "Fresh Ideas | Advertising Interior Company";
+$desc = "We create. We design with aesthetics and knowledge that fulfill the needs of each and everyone of our clients. We provide essential, time-efficient, and truly cost-effective results, according to the project’s demands that we are assigned to. Our team was formed in 2006 and consists of people with experience in advertising and marketing. We work together with great dynamics, full focus, and cover any communication need in a very fresh way! We follow a flexible process in terms of our clients’ time, goals, and budget, while dedicating our selves on each project, separately. One of the main reasons for our efficiency is that we arrange and coordinate the requirements and quickly come up with high quality creative solutions that empower the brand, while promoting products and services.";
 $title = "Fresh Ideas | Advertising Interior Company";
-$image = "http://fresh-ideas.eu$ROOT"."images/ogdefault.jpg";
+$image = "http://fresh-ideas.eu$ROOT"."images/ogdefault.png";
 
 if($_GET["w"]){
 
@@ -105,7 +105,7 @@ if($directive && !$anchor) $title = "Clients | Fresh Ideas";
 <title><?=$title?></title>
 <meta name="title" content="Fresh Ideas">
 <meta name="description" content="<?=$desc?>">
-<meta name="keywords" content="fresh ideas, patras">
+<meta name="keywords" content="fresh, ideas, eu, patra, patras,ad agency, advertisement, advertisements, advertising, advertising agencies, advertising agency directory, advertising companies, advertising company, creative advertising, creative agency, design agency, diafimistika, diafimistikes etairies, digital agency, digital marketing, direct marketinginternet marketing, marketing, marketing and advertising agency, online advertising, outdoor advertising, packaging design, packaging designerspublic relations, διαφήμιση, διαφημιστικά, διαφημιστικά γραφεία, διαφημιστικά έντυπα, διαφημιστικά φυλλάδια, διαφημιστικές εταιρίες, διαφημιστική, διαφημιστικη εταιρεια, διαφημιστική εταιρεία, διαφημιστικη εταιρεια αθηνα, διαφημιστική εταιρία, διαφημιστικο υλικο, ραδιοφωνικά σποτ, διαφήμιση, διαφημιστική εταιρεία πάτρα, διαφημιστικό γραφείο πάτρα, γραφιστικό γραφείο, διακοσμητικό γραφείο, συσκευασίες, ετικέτες, προωθητικά υλικά, έντυπα, κατάλογοι, διαφημιστικοί κατάλογοι, διαφημιστικά έντυπα, σχεδιασμός εντύπου, παραγωγή εντύπων, κατάλογος Barbie, Barbie, κατάλογος Fishe-Price, Fisher Price, κατάλογος Mattel, Mattel, ΕΛΟΜΑΣ, Rezos Brands, Achaia Clauss, Concepts, Design, Ideas, Logos, κείμενα, Εταιρική Ταυτότητα, έντυπα Υλικά, Καταχωρίσεις, retail, Digital Design, έντυπα, pisa, Sales Organizer menu, direct mail, site, αφίσες, flyers, banners ονοματολογία, αφισέτα, βιτρίνες, Αγγελίες Μακέτες Στέγαστρα Κατάλογοι Προϊόντων Direct Mail Φάκελος Εταιρική Ταυτότητα Stand Πάγκου Display Boxes Μελέτη Stand Εδάφους Φωτεινές Επιγραφές Κουπόνια Αυτοκόλλητα Ευχετήριες Κάρτες Διαφημιστικά Δώρα CDs Σχεδιασμός Sous-Plats Επιστολόχαρτο Φάκελος With Compliments Φόρμα Fax Εταιρικές Κάρτες Ετικέτες Μπουκαλιών Slogans Τίτλοι Creative Strategy Πρωτότυπες Συσκευασίες Διαφημιστικές Καμπάνιες">
 <meta property="og:image" content="<?=$image?>">
 <meta property="og:site_name" content="Fresh Ideas">
 <meta property="og:url" content="<?=$actual_link?>">
@@ -190,6 +190,7 @@ $clients = $q->fetchall(PDO::FETCH_ASSOC);
 <link rel="shortcut icon" href="<?=$ROOT?>images/favicon.ico">
 </head>
 <body>
+  
 <div class="side-bg ani05"></div>
 <div class="container ani05">
 
