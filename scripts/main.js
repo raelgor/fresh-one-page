@@ -55,7 +55,13 @@ OnePage.prototype.initialize = function(window){
 
   // Bind scroll event handler
   $(window).scroll(function(e){
-
+    
+    var scrollTop = $('body').scrollTop() || $('html').scrollTop();
+    
+    if(scrollTop>128){
+      $('.nav-container:not(.nav-ani)').addClass('nav-ani'); 
+    } else $('.nav-ani').removeClass('nav-ani');
+    
     // Spawn top-scroller
   	var halfHeight = window.innerHeight/2;
   	var bodyScroll = $('body').scrollTop();

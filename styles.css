@@ -495,7 +495,7 @@ div.menu-item:first-child .title {
 	border-radius: 0px;
 	background-size: 100%;
 	background-repeat: no-repeat;
-	background-color: white;
+	background-color: transparent;
 }
 div.menu-item:first-child:hover .title, div.menu-item:first-child .title.selected {
 	background-image: url(images/button_contact_active.png) !important;
@@ -943,3 +943,65 @@ div.work-page-holder h4, .site-page h4, div.work-page-holder h4 {
 	font-weight: normal; /*<span style="font-size:17px; color:rgb(134,134,133); font-family:CustomItalic;">*/
 }
 
+/* -------- NAVIGATION SIDE ANIMATION ---------- */
+
+@media screen and (min-width: 962px) {
+  
+.nav-ani {
+    position: fixed;
+    top: 100px;
+    -webkit-transform: rotate(90deg);
+    left: -150px;
+    -webkit-animation: moveToSide ease .5s 1;
+    z-index: 999999;
+    width: 340px;
+    opacity: .3;
+    -webkit-transition: opacity ease .5s;
+}
+
+.nav-ani:hover {
+    opacity: 1;
+    -webkit-transition: opacity ease .2s;
+}
+
+.nav-ani .menu-sub {
+    opacity: 0 !important;
+    pointer-events: none;
+}
+
+.nav-ani .menu-item {
+    -webkit-transition: all ease .5s;
+    width: 85px;
+}
+
+.nav-ani .title {
+    margin: 20px 0px;
+    -webkit-transform: rotate(-90deg);
+    -webkit-transition: all ease .5s;
+}
+
+.nav-ani .title:hover {
+    top: 2px !important;
+    left: -2px;
+    -webkit-transform: rotate(-90deg);
+    -webkit-transition: all ease .2s;
+}
+
+}
+
+@-webkit-keyframes moveToSide {
+
+    0% {
+        position: fixed;
+        top: 20px;
+        left: 100px;
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        top: 100px;
+        left: -150px;
+        -webkit-transform: rotate(90deg);
+    }
+
+}
