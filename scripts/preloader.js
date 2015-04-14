@@ -2,21 +2,17 @@
 OnePage.prototype.startPreloader = function(){
 
   window.imageCache = [];
-  siteData.images.forEach(function(i){
-
-    return;
-
-    var img = new Image();
-    img.src = '/' + i.src;
-    imageCache.push(img);
-
-  });
 
   // Preload static resources
   [
-
+    /* Potentially useless assets
+    
     'images/button_contact.jpg',
     'images/button_contact_active.jpg',
+    
+    */
+    'images/button_contact.png',
+    'images/button_contact_active.png',
     'images/contact_send_hover.png',
     'images/arrow_right_normal.png',
     'images/arrow_right_hover.png',
@@ -24,6 +20,7 @@ OnePage.prototype.startPreloader = function(){
     'images/arrow_left_hover.png',
     'images/a-right.png',
     'images/a-left.png',
+    'images/social.png',
 
   ].forEach(function(asset){
 
@@ -33,7 +30,7 @@ OnePage.prototype.startPreloader = function(){
 
   });
 
-}
+};
 
 // Preload on demand
 OnePage.prototype.preload = function(urls){

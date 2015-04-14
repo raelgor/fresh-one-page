@@ -119,6 +119,7 @@ span.fix_work_category {
     top: 50%;
     left: 50%;
     overflow:hidden;
+    opacity: 0;
     z-index: 9999999;
 }
 
@@ -179,7 +180,7 @@ body {
   display: inline-block;
   background-position: 3px 50%;
   background-size: initial;
-  margin: 38px 19% 0 10%;
+  margin: 38px 19.3% 0 10%;
   float: left;
 }
 
@@ -222,6 +223,13 @@ body {
 	display: inline-block;
 	font-size: 11px;
   text-indent: 0px;
+  position: relative;
+  top: 2px;
+}
+.menu-item .title:hover {
+  -webkit-transform: scale(1.02);
+  top: -1px !important;
+  -webkit-filter: drop-shadow(rgba(0,0,0,.08) 0 4px 1px);
 }
 .ani02 {
 	-webkit-transition-property: all;
@@ -405,7 +413,7 @@ article {
 }
 
 .nav-container .wrapper {
-  overflow: auto;
+  overflow: visible;
   display: inline-block;
   height: 150px;
   -webkit-transform: scale(1.5);
@@ -483,17 +491,17 @@ border-radius: 0px;
  background-color:rgba(102, 102, 102, 1);
 }
 div.menu-item:first-child .title {
-	background-image: url(images/button_contact.jpg);
+	background-image: url(images/button_contact.png);
 	border-radius: 0px;
 	background-size: 100%;
 	background-repeat: no-repeat;
 	background-color: white;
 }
 div.menu-item:first-child:hover .title, div.menu-item:first-child .title.selected {
-	background-image: url(images/button_contact_active.jpg) !important;
+	background-image: url(images/button_contact_active.png) !important;
 	background-size: 100%;
 	background-repeat: no-repeat;
-	background-color: white !important;
+	background-color: transparent !important;
 }
 div.infobar span {
 	text-transform: lowercase;
@@ -681,17 +689,18 @@ h1.contact-h1 {
 	font-weight: bold;
 }
 div.yellow-input input {
-	border: none;
-	outline: none;
-	width: 256px;
-	float: right;
-	position: absolute;
-	margin: 0 0 0 10px;
-	height: 28px;
-	font-family: inherit;
-	font-size: 22px;
-	font-weight: bold;
-	color: rgb(111, 111, 111);
+  border: none !important;
+  outline: none !important;
+  width: 264px !important;
+  float: right;
+  position: absolute;
+  margin: 0 0 0 10px !important;
+  height: 28px !important;
+  font-family: inherit !important;
+  font-size: 22px !important;
+  font-weight: bold !important;
+  color: rgb(111, 111, 111) !important;
+  padding: 1px !important;
 }
 .yellow-input.text {
 	height: 220px;

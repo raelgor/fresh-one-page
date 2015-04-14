@@ -10,6 +10,9 @@ window.DIST_TOLERANCE    = 4;   // pixels
 function OnePage(window){
 
   this.window = window;
+  
+  // The image element projected last in the image viewer
+  this.currentImageViewer = null;
 
   // Start the site
   this.initialize(window);
@@ -144,7 +147,7 @@ OnePage.prototype.initialize = function(window){
     }
 
     if( $(e.target).is('.work-page-holder img') ){
-      setTimeout(function(){OnePage.startImageViewer.call(e.target);},50);
+      setTimeout(function(){OnePage.startImageViewer.call(e.target,e);},50);
     }
 
     var target = $(e.target);
@@ -169,6 +172,14 @@ OnePage.prototype.initialize = function(window){
 
   // Jesus
   setInterval(function(){ OnePage.responsive(); },1500);
+  
+  $(window).resize(function(){ 
+    
+    if($('.image-viewer').length){
+      OnePage.spawnImage(window.OnePage.prototype.currentImageViewer,true);
+    }
+    
+  });
 
 };
 
@@ -290,7 +301,7 @@ OnePage.prototype.onSwipe = function(element,direction,callback){
   
 };
 
-OnePage.prototype.startImageViewer = function(){
+OnePage.prototype.startImageViewer = function(event){
 
   if($('.image-viewer,.work-page-holder:animated,.work-page-holder.client').length || window.isPhone) return;
 
@@ -301,6 +312,26 @@ OnePage.prototype.startImageViewer = function(){
               '<div class="viewer-arrow-right ani05"></div>') 
         .find('*')
         .bind("click touchend",navigateImages);
+
+  if(event){
+    
+    var padding = $(this).css('padding-top').split('px'),
+        scrollTop = $('body').scrollTop() || $('html').scrollTop();
+        
+    // Scroll to clicked image if out of viewport
+    if((scrollTop > $(this).offset().top) || (scrollTop + window.innerHeight < $(this).offset().top + $(this).height()))
+      $('body,html').animate({scrollTop:(+$(this).offset().top-20)+'px'},1000,'swing');
+    
+    padding = padding.length ? parseInt(padding[0]) : 0;
+    
+    viewer.css({
+      top:  ((event.screenY - event.offsetY - padding)/window.innerHeight)*100 + '%',
+      left: ($(this).offset().left/window.innerWidth)*100 + '%',
+      width: ($(this).width()/window.innerWidth)*100 + '%',
+      height: ($(this).height()/window.innerHeight)*100 + '%' 
+    });
+    
+  }
 
   function navigateImages(){
 
@@ -336,7 +367,7 @@ OnePage.prototype.startImageViewer = function(){
   OnePage.prototype.onSwipe(viewer,'left' ,
                               function(){ $('.viewer-arrow-right').click(); });
 
-  function spawnImage(image){
+  function spawnImage(image,isResize){
 
     // Calculate dimensions
     var imageWidth      = image.width(),
@@ -356,6 +387,20 @@ OnePage.prototype.startImageViewer = function(){
         currentImage    = viewer.find('img'),
         newImage        = image.clone().css('padding','0px'),
         r               = 0;
+        
+    
+    if(!isResize){ 
+      
+      newImgCss.opacity = 0;
+      
+    } else {
+      
+      newImage          = currentImage;
+      
+    }
+        
+    // Export in case resize is fired
+    OnePage.prototype.currentImageViewer = image;
 
     function ratio(r){ return r ? imageRatio < 1 : imageRatio > 1; }
 
@@ -389,31 +434,37 @@ OnePage.prototype.startImageViewer = function(){
     // Apply
     viewer.css(css);
 
-    currentImage.animate({opacity:0},500,'swing',
+    if(!isResize) currentImage.animate({opacity:0},500,'swing',
                           function(){ $(this).remove(); });
 
-    newImgCss.opacity = 0;
     newImgCss.height = newImgCss.width = '100%';
 
     newImage.css(newImgCss);
 
-    setTimeout(function(){
+    if(currentImage.length) setTimeout(function(){
+      if(isResize) return; 
       viewer.append(newImage);
       newImage.animate({opacity:1},500,'swing');
     },510);
 
-    if(!currentImage.length)
-      viewer.css({opacity:0})
-            .delay(10)
-            .animate({opacity:1},500,'swing');
-
+    if(!currentImage.length && !isResize){
+    
+      viewer.append(newImage.css('opacity',1));
+    
+      viewer.css({opacity:1}); 
+    
+    }
+    
     setTimeout(function(){ viewer.removeClass('unborn'); },500);
 
   }
-
+  
+  // Export (mess)
+  OnePage.prototype.spawnImage = spawnImage;
+  
   $('body').append(viewer);
 
-  spawnImage($(this));
+  spawnImage($(this),false);
   $('body>*:not(.image-viewer)').addClass('blurry');
 
 };

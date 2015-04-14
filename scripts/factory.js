@@ -129,7 +129,12 @@ OnePage.prototype.setPage = function(alias){
 		// Images always fade in
 		$('.site-page img').load(function(){
 		  $(this).animate({opacity:1},200,'swing'); OnePage.fixSides(); });
-
+    
+    // Focus from any click
+    $('.yellow-input').bind('click',function(){
+      $(this).find('input,textarea').focus();
+    });
+    
     // If contact page make the send button function
 		$('.send-button').bind("click touchend",function(){
 
