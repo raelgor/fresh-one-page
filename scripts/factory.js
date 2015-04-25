@@ -36,7 +36,10 @@ OnePage.prototype.menuFactory = function(){
 
 	// Handle clicks with navigation
 	$('.menu-item .title').bind("click touchend",function(e){
-
+    
+    // Added in case we have a side menu
+    $('html,body').animate({scrollTop:0},300,'swing');
+    
 	  // Create state object
 	  var menu    = $(this).parents('.menu-item');
 		var menuID  = menu.attr('data-id');

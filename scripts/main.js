@@ -457,7 +457,7 @@ OnePage.prototype.startImageViewer = function(event){
     
       viewer.append(newImage.css('opacity',1));
     
-      viewer.css({opacity:1}); 
+      setTimeout(function(){ viewer.css({opacity:1}); },0);
     
     }
     
